@@ -1,12 +1,9 @@
 <template>
-  <div class="a">
-      
-      <NabBar0 />
-    <div id="general"></div>
-
-    <v-container class="grey lighten-6">
-        
-    <v-row no-gutters>
+<div class="Principaladmin">
+<NabBar0 />
+<div id="general"></div>
+<v-container class="grey lighten-6">
+<v-row no-gutters>
       <v-col
         cols="4"
         
@@ -23,7 +20,7 @@
           <br>
         
         <div id="general">
-            
+            Vista Administrador.<br>
             Para poder ver tus aplicaciones, debes iniciar sesión.
             <br><br><br><br><br>
             <br>
@@ -32,19 +29,24 @@
             color=#002F6C
             dark
             @click="login"
-            >
-            Iniciar sesión como estudiante
+            ><br> 
+            Iniciar sesión como<br> Administrador<br> 
             </v-btn>
-            <br><br>
-            
+            <br>
+             <div id="right">
             <v-btn
-            rounded
-            color=#002F6C
-            dark
-            @click="login2"
+              icon
+              fab
+              x-small
+              router-link to="/"
             >
-            Iniciar sesión como Admin?
+              <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
+            </div>
+            <br>
+            
+         
+         
 
 
             <br>
@@ -73,34 +75,24 @@
        
      </v-col>
     </v-row>
-      
-    <div class="text-center">
-        
-        <br><br><br><br>
-        
-        2020 <br><br><br>
-        
-    </div>
-    
 
-    </v-container>
-  </div>
+
+</v-container>
+
+
+</div>
+
+
+
 </template>
 
 <script>
 import firebase from 'firebase';
-
-
-
 import NabBar0 from '@/components/NabBar0.vue'
-
-
-  
-
 
 export default {
 
-    name: 'a',
+    name: 'login_Admin',
     components: {
         NabBar0
     },
@@ -112,17 +104,7 @@ export default {
             const provider = new firebase.auth.GoogleAuthProvider();
 
             firebase.auth().signInWithPopup(provider).then((result) => {
-                this.$router.replace('/home');
-                console.log(result);
-            }).catch((err) => {
-                alert('Oops. ' + err.message);
-            })
-        },
-        login2: function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-
-            firebase.auth().signInWithPopup(provider).then((result) => {
-                this.$router.replace('/home');
+                this.$router.replace('/landingA');
                 console.log(result);
             }).catch((err) => {
                 alert('Oops. ' + err.message);
@@ -130,6 +112,8 @@ export default {
         },
     }
 }
+
+
 </script>
 
 <style scoped>

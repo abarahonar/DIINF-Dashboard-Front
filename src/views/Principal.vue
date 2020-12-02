@@ -1,5 +1,5 @@
 <template>
-  <div class="a">
+  <div class="login">
       
       <NabBar0 />
     <div id="general"></div>
@@ -18,7 +18,6 @@
           tile
           outlined
           height = 300px
-
         >
           <br>
         
@@ -36,19 +35,17 @@
             Iniciar sesión como estudiante
             </v-btn>
             <br><br>
-            
+
+            <div id="right">
             <v-btn
-            rounded
-            color=#002F6C
-            dark
-            @click="login2"
+              icon
+              fab
+              x-small
+              router-link to="/adminLogin"
             >
-            Iniciar sesión como Admin?
+              <v-icon>mdi-wrench</v-icon>
             </v-btn>
-
-
-            <br>
-
+            </div>
         </div>
         
 
@@ -72,16 +69,7 @@
        
        
      </v-col>
-    </v-row>
-      
-    <div class="text-center">
-        
-        <br><br><br><br>
-        
-        2020 <br><br><br>
-        
-    </div>
-    
+    </v-row> 
 
     </v-container>
   </div>
@@ -89,18 +77,11 @@
 
 <script>
 import firebase from 'firebase';
-
-
-
 import NabBar0 from '@/components/NabBar0.vue'
-
-
-  
-
 
 export default {
 
-    name: 'a',
+    name: 'login',
     components: {
         NabBar0
     },
@@ -112,17 +93,7 @@ export default {
             const provider = new firebase.auth.GoogleAuthProvider();
 
             firebase.auth().signInWithPopup(provider).then((result) => {
-                this.$router.replace('/home');
-                console.log(result);
-            }).catch((err) => {
-                alert('Oops. ' + err.message);
-            })
-        },
-        login2: function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-
-            firebase.auth().signInWithPopup(provider).then((result) => {
-                this.$router.replace('/home');
+                this.$router.replace('/landing');
                 console.log(result);
             }).catch((err) => {
                 alert('Oops. ' + err.message);
