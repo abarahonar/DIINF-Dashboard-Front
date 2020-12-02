@@ -9,15 +9,7 @@ import axios from "axios";
 
 Vue.config.productionTip = false
 
-
 let app = ''
-
-
-
-
-axios.defaults.headers.common['Access-Control-Allow-Headers'] = '*';
-
-
 
 var firebaseConfig = {
   apiKey: "AIzaSyAgEy76g3k3D3yJ_Pyd-3zsbGrROEZGPSc",

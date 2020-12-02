@@ -4,7 +4,7 @@
      />
     <v-container class="grey lighten-6">
     
-    
+    <v-app id="generalPage">
     <v-row no-gutters>
       <v-col
         cols="12"
@@ -31,8 +31,8 @@
 
          <v-row dense>   
           <v-col
-          v-for="a in aplicaciones"
-          :key="a.nombre"
+          v-for="a in apps"
+          :key="a.name"
           :cols= 4
         >
 
@@ -41,15 +41,17 @@
           max-width = 260px >
           <br>
           
-           {{ a.nombre }}<br>
+           {{ a.name }}<br>
           <v-btn
               color=#EA7600
               fab
               x-small
               dark
+              @click="goto(a.url)"
             >
               <v-icon>mdi-note</v-icon>
             </v-btn>
+            <a :href="a.url">
             <v-btn
               color=#EA7600
               fab
@@ -58,7 +60,7 @@
             >
               <v-icon>mdi-wrench</v-icon>
             </v-btn>
-            
+            </a>
 
           <br><br>
           </v-card>
@@ -85,8 +87,8 @@
 
 
          <v-divider></v-divider><br>
-          {{info}}
-          <v-app id="aaa" height = 1px width= 1px>
+          
+          
               <div class="textblock">
             Lorem Ipsum is simply dummy text of the printingase of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versionsf the printing and  of Lorem Ipsum.
 <br>
@@ -103,15 +105,16 @@
 <v-divider></v-divider><br>
         </div>
 
-          </v-app>
+          
 
          <br>
          
 
-          {{info}}
+          
          
       </v-col>
     </v-row>
+    </v-app>
   </v-container>
 </div>
 </template>
@@ -130,7 +133,7 @@ export default {
   },
   data() {
     return {
-      info: null,
+      apps: [],
       flex: '3',
       photoURL: '',
       displayName: '',
@@ -180,14 +183,17 @@ export default {
     this.email = user.email;
     this.photoURL = user.photoURL; 
   },
-  mounted () {
+    mounted () {
     axios.get('http://localhost:80/list-apps',
-    {headers:{ 
-            'Access-Control-Allow-Origin':'*'
-           
-
-    },
-    }).then(response => this.info = response);
+    ).then(response => this.apps = response.data);
+  },
+    methods: {
+        goto(item) {
+            this.item = item;
+            this.$router.push({path: item});
+            
+            
+        },
     }
 
     

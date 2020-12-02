@@ -4,7 +4,7 @@
      />
     <v-container class="grey lighten-6">
     
-    
+    <v-app id="aaa" height = 1px width= 1px>
     <v-row no-gutters>
       <v-col
         cols="12"
@@ -31,8 +31,8 @@
 
          <v-row dense>   
           <v-col
-          v-for="a in aplicaciones"
-          :key="a.nombre"
+          v-for="a in apps"
+          :key="a.name"
           :cols= 4
         >
 
@@ -41,7 +41,7 @@
           max-width = 260px >
           <br>
           
-           {{ a.nombre }}
+           {{ a.name }}
           <br>
           
           <v-btn
@@ -49,6 +49,7 @@
               fab
               x-small
               dark
+              @click="goto(a.url)"
             >
               <v-icon>mdi-note</v-icon>
             </v-btn>
@@ -82,10 +83,7 @@
          
         
        
-       
-
-          {{info}}
-          <v-app id="aaa" height = 1px width= 1px>
+          
               <div class="textblock">
             Lorem Ipsum is simply dummy text of the printingase of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versionsf the printing and  of Lorem Ipsum.
 <br>
@@ -94,10 +92,11 @@
 <v-divider></v-divider><br>
         </div>
 
-          </v-app>
+          
 
       </v-col>
     </v-row>
+    </v-app>
   </v-container>
 </div>
 </template>
@@ -121,6 +120,8 @@ export default {
       photoURL: '',
       displayName: '',
       email: '',
+      apps:[
+      ],
       aplicaciones: [
         {
           nombre: 'Aplicacion 1', logo: 'UWU', direccion: 'http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png'
@@ -168,13 +169,16 @@ export default {
   },
   
   mounted () {
-    axios.get('http://localhost:80/list-apps',
-    {headers:{ 
-            'Access-Control-Allow-Origin':'*'
-           
-
+    axios.get('http://localhost:80/user-apps',
+    ).then(response => this.apps = response.data);
     },
-    }).then(response => this.info = response);
+    methods: {
+        goto(item) {
+            this.item = item;
+            this.$router.replace(item);
+            
+            
+        },
     }
 }
 
