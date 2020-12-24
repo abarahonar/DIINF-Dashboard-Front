@@ -84,7 +84,7 @@
 
 <script>
 	import firebase from "firebase";
-	import NabBar0 from "@/components/NabBar0.vue";
+	import NabBar0 from "@/components/Nav_Bar.vue";
 
 	export default {
 		name: "login",

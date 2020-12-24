@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import firebase from 'firebase'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
 
 
 import Principal from '../views/Principal.vue'
 import Principal_Admin from '../views/Principal_Admin.vue'
 import Landing_User from '../views/Landing_User.vue'
 import Landing_Admin from '../views/Landing_Admin.vue'
-
+import Rol from '../views/Rol.vue'
+import Avisos from '../views/Avisos.vue'
 
 //import Login from '../views/Login.vue'
 //import Error from '../views/Error.vue'
@@ -23,7 +24,7 @@ const routes = [
     //component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/adminLogin',
+    path: '/adminlogin',
     name: 'PrincipalAdmin',
     component: Principal_Admin
   },
@@ -33,9 +34,19 @@ const routes = [
     component: Landing_User
   },
   {
-    path: '/landingA',
+    path: '/landinga',
     name: 'LandingAdmin',
     component: Landing_Admin
+  },
+  {
+    path: '/rol',
+    name: 'Rol',
+    component: Rol
+  },
+  {
+    path: '/Avisos',
+    name: 'Avisos',
+    component: Avisos
   },
 ]
 

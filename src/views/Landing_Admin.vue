@@ -21,7 +21,7 @@
 									<v-col v-for="a in apps" :key="a.name" :cols="4">
 										<v-card outlined max-width="260px">
 											<br />
-
+											<img alt="imgapp" :src="a.imgdir" height="90px" /><br />
 											{{ a.name }}<br />
 											<v-btn
 												color="#EA7600"
@@ -60,11 +60,66 @@
 							sheets containing Lorem Ipsum passages, and more recently with
 							desktop publishing software like Aldus PageMaker including
 							versionsf the printing and of Lorem Ipsum.
-							<br /><br /><br />
+							<br /><br />
+
+							<v-dialog v-model="dialog" max-width="500px">
+								<template v-slot:activator="{ on, attrs }">
+									<v-btn
+										dark
+										class="ma-2"
+										color="#002F6C"
+										v-bind="attrs"
+										v-on="on"
+									>
+										Nueva App
+									</v-btn>
+								</template>
+								<v-card>
+									<v-card-title>
+										<span class="headline">{{ formTitle }}</span>
+									</v-card-title>
+
+									<v-card-text>
+										<v-container>
+											<v-row>
+												<v-col cols="12" sm="6" md="4">
+													<v-text-field
+														v-model="editedItem.name"
+														label="Nombre Aplicacion"
+													></v-text-field>
+												</v-col>
+												<v-col cols="12" sm="6" md="4">
+													<v-text-field
+														v-model="editedItem.url"
+														label="Direccion"
+													></v-text-field>
+												</v-col>
+												<v-col cols="12" sm="6" md="4">
+													<v-text-field
+														v-model="editedItem.imgdir"
+														label="URL Imagen"
+													></v-text-field>
+												</v-col>
+											</v-row>
+										</v-container>
+									</v-card-text>
+
+									<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn color="blue darken-1" text @click="close">
+											Cancel
+										</v-btn>
+										<v-btn color="blue darken-1" text @click="save">
+											Save
+										</v-btn>
+									</v-card-actions>
+								</v-card>
+							</v-dialog>
+							<br />
 							<v-btn class="ma-2" color="#002F6C" dark>
 								Gestion Usuarios
 							</v-btn>
-							<br /><br /><br /><br />
+							<br /><br /><br />
 							<v-divider></v-divider><br />
 						</div>
 
@@ -94,7 +149,7 @@
 <script>
 	import firebase from "firebase";
 	import axios from "axios";
-	import NabBarUser from "@/components/NabBarUser.vue";
+	import NabBarUser from "@/components/Nav_BarUser.vue";
 
 	export default {
 		name: "Home",
@@ -104,86 +159,106 @@
 		},
 		data() {
 			return {
-				apps: [],
+				//apps: [],
+				dialog: false,
+				editedIndex: -1,
+				editedItem: {
+					name: "",
+					url: "",
+					imgdir: "",
+				},
+				defaultItem: {
+					name: "",
+					url: "",
+					imgdir: "",
+				},
 				flex: "3",
 				photoURL: "",
 				displayName: "",
 				email: "",
-				aplicaciones: [
+				apps: [
 					{
-						nombre: "Aplicacion 1",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Rol",
+						url: "rol",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 2",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Avisos",
+						url: "avisos",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 3",
-						logo: "UWU",
-						direccion:
+						name: "Aplicacion 3",
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/icone-youtube-branco-png-6.png",
 					},
 					{
-						nombre: "Aplicacion 4",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 4",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 5",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 5",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 6",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 6",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 7",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 7",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 8",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 8",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 9",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 9",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 10",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 10",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 11",
-						logo: "UWU",
-						direccion:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						name: "Aplicacion 11",
+						url: "UWU",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 				],
 			};
 		},
+		computed: {
+			formTitle() {
+				return this.editedIndex === -1
+					? "Nueva Aplicación"
+					: "Editar Aplicación";
+			},
+		},
+
+		watch: {
+			dialog(val) {
+				val || this.close();
+			},
+			dialogDelete(val) {
+				val || this.closeDelete();
+			},
+		},
+
 		created() {
 			const user = firebase.auth().currentUser;
 			this.displayName = user.displayName;
 			this.email = user.email;
 			this.photoURL = user.photoURL;
+			this.initialize();
 		},
 		mounted() {
 			axios
@@ -194,6 +269,47 @@
 			goto(item) {
 				this.item = item;
 				this.$router.push({ path: item });
+			},
+			editItem(item) {
+				this.editedIndex = this.desserts.indexOf(item);
+				this.editedItem = Object.assign({}, item);
+				this.dialog = true;
+			},
+
+			deleteItem(item) {
+				this.editedIndex = this.desserts.indexOf(item);
+				this.editedItem = Object.assign({}, item);
+				this.dialogDelete = true;
+			},
+
+			deleteItemConfirm() {
+				this.desserts.splice(this.editedIndex, 1);
+				this.closeDelete();
+			},
+
+			close() {
+				this.dialog = false;
+				this.$nextTick(() => {
+					this.editedItem = Object.assign({}, this.defaultItem);
+					this.editedIndex = -1;
+				});
+			},
+
+			closeDelete() {
+				this.dialogDelete = false;
+				this.$nextTick(() => {
+					this.editedItem = Object.assign({}, this.defaultItem);
+					this.editedIndex = -1;
+				});
+			},
+
+			save() {
+				if (this.editedIndex > -1) {
+					Object.assign(this.desserts[this.editedIndex], this.editedItem);
+				} else {
+					this.apps.push(this.editedItem);
+				}
+				this.close();
 			},
 		},
 	};

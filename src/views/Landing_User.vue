@@ -91,7 +91,7 @@
 <script>
 	import firebase from "firebase";
 	import axios from "axios";
-	import NabBarUser from "@/components/NabBarUser.vue";
+	import NabBarUser from "@/components/Nav_BarUser.vue";
 
 	export default {
 		name: "Home",
@@ -106,70 +106,70 @@
 				photoURL: "",
 				displayName: "",
 				email: "",
-				apps: [],
-				aplicaciones: [
+				//apps: [],
+				apps: [
 					{
-						nombre: "Aplicacion 1",
+						name: "Aplicacion 1",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 2",
+						name: "Aplicacion 2",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 3",
+						name: "Aplicacion 3",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/icone-youtube-branco-png-6.png",
 					},
 					{
-						nombre: "Aplicacion 4",
+						name: "Aplicacion 4",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 5",
+						name: "Aplicacion 5",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 6",
+						name: "Aplicacion 6",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 7",
+						name: "Aplicacion 7",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 8",
+						name: "Aplicacion 8",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 9",
+						name: "Aplicacion 9",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 10",
+						name: "Aplicacion 10",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
-						nombre: "Aplicacion 11",
+						name: "Aplicacion 11",
 						logo: "UWU",
 						direccion:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
