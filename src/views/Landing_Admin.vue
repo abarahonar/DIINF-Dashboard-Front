@@ -23,20 +23,35 @@
 											<br />
 											<img alt="imgapp" :src="a.imgdir" height="90px" /><br />
 											{{ a.name }}<br />
+											<a :href="a.url">
+												<v-btn
+													color="#EA7600"
+													fab
+													x-small
+													dark
+													@click="goto(a.url)"
+												>
+													<v-icon>mdi-note</v-icon>
+												</v-btn>
+											</a>
 											<v-btn
 												color="#EA7600"
+												@click="editItem(a)"
 												fab
 												x-small
 												dark
-												@click="goto(a.url)"
 											>
-												<v-icon>mdi-note</v-icon>
+												<v-icon>mdi-pencil</v-icon>
 											</v-btn>
-											<a :href="a.url">
-												<v-btn color="#EA7600" fab x-small dark>
-													<v-icon>mdi-wrench</v-icon>
-												</v-btn>
-											</a>
+											<v-btn
+												color="#EA7600"
+												@click="deleteItem(a)"
+												fab
+												x-small
+												dark
+											>
+												<v-icon>mdi-delete</v-icon>
+											</v-btn>
 
 											<br /><br />
 										</v-card>
@@ -46,82 +61,102 @@
 						</v-card>
 					</v-col>
 					<v-col cols="6" md="4">
-						<br /><br /><br /><br />
+						<div class="textblock">
+							<v-divider></v-divider><br />
+
+							Lorem Ipsum is simply dummy text of the printingase of Letraset
+							sheets containing Lorem Ipsum passages, and more recently with
+							desktop publishing software like Aldus PageMaker including
+							versionsf the printing and of Lorem Ipsum.
+							<br />
+							Lorem Ipsum is simply dummy text of the printingase of Letraset
+							sheets containing Lorem Ipsum passages, and more recently with
+							desktop publishing software like Aldus PageMaker including
+							versionsf the printing and of Lorem Ipsum.
+							<br />
+						</div>
+						<v-dialog v-model="dialog" max-width="500px">
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn
+									dark
+									class="ma-2"
+									color="#002F6C"
+									v-bind="attrs"
+									v-on="on"
+								>
+									Nueva App
+								</v-btn>
+							</template>
+							<v-card>
+								<v-toolbar color="#EA7600" dark flat>
+									<v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+								</v-toolbar>
+
+								<v-form ref="form" v-model="valid" lazy-validation>
+									<div class="paddingEdit">
+										<v-text-field
+											v-model="editedItem.name"
+											:rules="nameRules"
+											block
+											label="Nombre Aplicacion"
+											required
+										></v-text-field>
+
+										<v-text-field
+											v-model="editedItem.url"
+											:rules="dirRules"
+											label="Direccion"
+											required
+										></v-text-field>
+
+										<v-text-field
+											v-model="editedItem.imgdir"
+											:rules="urlRules"
+											label="URL Imagen"
+											required
+										></v-text-field>
+
+										<v-spacer></v-spacer>
+										<v-btn color="#002F6C" text @click="close">
+											Cancelar
+										</v-btn>
+										<v-btn
+											color="#002F6C"
+											:disabled="!valid"
+											text
+											@click="save"
+										>
+											Guardar Aplicación
+										</v-btn>
+									</div>
+								</v-form>
+							</v-card>
+						</v-dialog>
+						<v-dialog v-model="dialogDelete" max-width="500px">
+							<v-card>
+								<v-toolbar color="#EA7600" dark flat>
+									<v-toolbar-title>Borrar Aplicación</v-toolbar-title>
+								</v-toolbar>
+								<br />
+								¿Seguro que quiere eliminar la aplicación?
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<v-btn color="blue darken-1" text @click="closeDelete"
+										>Cancelar</v-btn
+									>
+									<v-btn color="blue darken-1" text @click="deleteItemConfirm"
+										>Borrar Aplicacion</v-btn
+									>
+									<v-spacer></v-spacer>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
+						<br />
+						<v-btn class="ma-2" color="#002F6C" dark>
+							Gestion Usuarios
+						</v-btn>
 
 						<v-divider></v-divider><br />
-
-						<div class="textblock">
-							Lorem Ipsum is simply dummy text of the printingase of Letraset
-							sheets containing Lorem Ipsum passages, and more recently with
-							desktop publishing software like Aldus PageMaker including
-							versionsf the printing and of Lorem Ipsum.
-							<br />
-							Lorem Ipsum is simply dummy text of the printingase of Letraset
-							sheets containing Lorem Ipsum passages, and more recently with
-							desktop publishing software like Aldus PageMaker including
-							versionsf the printing and of Lorem Ipsum.
-							<br /><br />
-
-							<v-dialog v-model="dialog" max-width="500px">
-								<template v-slot:activator="{ on, attrs }">
-									<v-btn
-										dark
-										class="ma-2"
-										color="#002F6C"
-										v-bind="attrs"
-										v-on="on"
-									>
-										Nueva App
-									</v-btn>
-								</template>
-								<v-card>
-									<v-card-title>
-										<span class="headline">{{ formTitle }}</span>
-									</v-card-title>
-
-									<v-card-text>
-										<v-container>
-											<v-row>
-												<v-col cols="12" sm="6" md="4">
-													<v-text-field
-														v-model="editedItem.name"
-														label="Nombre Aplicacion"
-													></v-text-field>
-												</v-col>
-												<v-col cols="12" sm="6" md="4">
-													<v-text-field
-														v-model="editedItem.url"
-														label="Direccion"
-													></v-text-field>
-												</v-col>
-												<v-col cols="12" sm="6" md="4">
-													<v-text-field
-														v-model="editedItem.imgdir"
-														label="URL Imagen"
-													></v-text-field>
-												</v-col>
-											</v-row>
-										</v-container>
-									</v-card-text>
-
-									<v-card-actions>
-										<v-spacer></v-spacer>
-										<v-btn color="blue darken-1" text @click="close">
-											Cancel
-										</v-btn>
-										<v-btn color="blue darken-1" text @click="save">
-											Save
-										</v-btn>
-									</v-card-actions>
-								</v-card>
-							</v-dialog>
-							<br />
-							<v-btn class="ma-2" color="#002F6C" dark>
-								Gestion Usuarios
-							</v-btn>
-							<br /><br /><br />
-							<v-divider></v-divider><br />
-						</div>
 
 						<br />
 					</v-col>
@@ -162,6 +197,13 @@
 				//apps: [],
 				dialog: false,
 				editedIndex: -1,
+				valid: true,
+				nameRules: [
+					v => !!v || "Debe escribir un numbre ",
+					v => (v && v.length <= 20) || "Debe tener menos de 20 caracteres",
+				],
+				dirRules: [v => !!v || "Debe escribir la dirección de la Aplicación "],
+				urlRules: [v => !!v || "Debe escribir la URL de la imagen "],
 				editedItem: {
 					name: "",
 					url: "",
@@ -271,19 +313,19 @@
 				this.$router.push({ path: item });
 			},
 			editItem(item) {
-				this.editedIndex = this.desserts.indexOf(item);
+				this.editedIndex = this.apps.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialog = true;
 			},
 
 			deleteItem(item) {
-				this.editedIndex = this.desserts.indexOf(item);
+				this.editedIndex = this.apps.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialogDelete = true;
 			},
 
 			deleteItemConfirm() {
-				this.desserts.splice(this.editedIndex, 1);
+				this.apps.splice(this.editedIndex, 1);
 				this.closeDelete();
 			},
 
@@ -305,7 +347,7 @@
 
 			save() {
 				if (this.editedIndex > -1) {
-					Object.assign(this.desserts[this.editedIndex], this.editedItem);
+					Object.assign(this.apps[this.editedIndex], this.editedItem);
 				} else {
 					this.apps.push(this.editedItem);
 				}
@@ -316,25 +358,15 @@
 </script>
 
 <style lang="scss" scoped>
-	.rounded {
-		border-radius: 50%;
-	}
-
-	.topspace {
-		margin-top: 2rem;
-		margin-bottom: -15px;
-	}
-
-	.capitalizar {
-		text-transform: capitalize;
-	}
-
-	.size {
-		height: 25px;
-		width: 25px;
-	}
-
 	.overflow-y {
 		overflow-y: auto;
+	}
+	.textblock {
+		margin-top: 70px;
+		padding: 25px;
+		text-align: justify;
+	}
+	.paddingEdit {
+		padding: 25px;
 	}
 </style>

@@ -110,68 +110,68 @@
 				apps: [
 					{
 						name: "Aplicacion 1",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 2",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 3",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/icone-youtube-branco-png-6.png",
 					},
 					{
 						name: "Aplicacion 4",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 5",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 6",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 7",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 8",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 9",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 10",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						name: "Aplicacion 11",
-						logo: "UWU",
-						direccion:
+						url: "UWU",
+						imgdir:
 							"http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 				],
