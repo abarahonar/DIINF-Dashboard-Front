@@ -93,7 +93,7 @@
 								</v-toolbar>
 
 								<v-form ref="form" v-model="valid" lazy-validation>
-									<div class="paddingEdit">
+									<div class="padding">
 										<v-text-field
 											v-model="editedItem.name"
 											:rules="nameRules"
@@ -141,10 +141,10 @@
 								¿Seguro que quiere eliminar la aplicación?
 								<v-card-actions>
 									<v-spacer></v-spacer>
-									<v-btn color="blue darken-1" text @click="closeDelete"
+									<v-btn color="#002F6C" text @click="closeDelete"
 										>Cancelar</v-btn
 									>
-									<v-btn color="blue darken-1" text @click="deleteItemConfirm"
+									<v-btn color="#002F6C" text @click="deleteItemConfirm"
 										>Borrar Aplicacion</v-btn
 									>
 									<v-spacer></v-spacer>
@@ -366,7 +366,7 @@
 		padding: 25px;
 		text-align: justify;
 	}
-	.paddingEdit {
+	.padding {
 		padding: 25px;
 	}
 </style>

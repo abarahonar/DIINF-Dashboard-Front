@@ -18,49 +18,114 @@
 						>
 							<v-card-text>
 								<v-col v-for="a in avisos" :key="a.name" :cols="12">
-									<v-alert
-										border="bottom"
-										colored-border
-										type="warning"
-										elevation="1"
-									>
-										<h1>{{ a.title }}</h1>
-										{{ a.text }}
-									</v-alert>
+									<v-card>
+										<v-card :color="a.color" flat
+											><h2>{{ a.title }}</h2></v-card
+										>
+										<div class="justify-text">
+											{{ a.text }}
+										</div>
+										<div class="right-buttons">
+											<v-btn icon @click="editItem(a)" fab small flat>
+												<v-icon>mdi-pencil</v-icon>
+											</v-btn>
+											<v-btn icon @click="deleteItem(a)" fab flat small>
+												<v-icon>mdi-delete</v-icon>
+											</v-btn>
+										</div>
+									</v-card>
 								</v-col>
 							</v-card-text>
 						</v-card>
 					</v-col>
 					<v-col cols="6" md="4">
-						<br /><br /><br /><br />
-
-						<v-divider></v-divider><br />
-
 						<div class="textblock">
-							<v-text-field
-								v-model="name"
-								:counter="10"
-								:rules="nameRules"
-								label="Titulo"
-								required
-							></v-text-field>
+							<v-divider></v-divider><br />
 
-							<v-textarea autocomplete="email" label="Mensaje"></v-textarea>
+							Vista de Avisos<br />
+							Crear, editar y borrar avisos~ <br />
+							<v-dialog v-model="dialog" max-width="500px">
+								<template v-slot:activator="{ on, attrs }">
+									<v-btn
+										dark
+										class="ma-2"
+										color="#002F6C"
+										v-bind="attrs"
+										v-on="on"
+									>
+										Crear Aviso
+									</v-btn>
+								</template>
+								<v-card>
+									<v-toolbar color="#EA7600" dark flat>
+										<v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+									</v-toolbar>
 
-							<br />
+									<v-form ref="form" v-model="valid" lazy-validation>
+										<div class="padding">
+											<v-text-field
+												v-model="editedItem.title"
+												:counter="40"
+												:rules="titleRules"
+												label="Titulo"
+												required
+											></v-text-field>
 
-							<v-overflow-btn
-								class="my-2"
-								:items="items"
-								label="Tipo de aviso"
-								dense
-							></v-overflow-btn>
-							<br /><br />
+											<v-textarea
+												required
+												v-model="editedItem.text"
+												:rules="messageRules"
+												:counter="320"
+												label="Mensaje"
+											></v-textarea>
 
-							<v-btn class="ma-2" color="#002F6C" dark>
-								Subir Alerta
-							</v-btn>
-							<br /><br /><br />
+											<v-overflow-btn
+												v-model="editedItem.color"
+												label="Tipo de aviso"
+												class="my-2"
+												:items="types"
+												item-value="color"
+												item-text="name"
+												required
+												dense
+											></v-overflow-btn>
+
+											<v-btn color="#002F6C" text @click="close">
+												Cancelar
+											</v-btn>
+											<v-btn
+												color="#002F6C"
+												:disabled="!valid"
+												text
+												@click="save"
+											>
+												Guardar Aviso
+											</v-btn>
+										</div>
+									</v-form>
+								</v-card>
+							</v-dialog>
+
+							<v-dialog v-model="dialogDelete" max-width="500px">
+								<v-card>
+									<v-toolbar color="#EA7600" dark flat>
+										<v-toolbar-title>Borrar Aplicación</v-toolbar-title>
+									</v-toolbar>
+									<br />
+									¿Seguro que quiere eliminar este aviso?
+									<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn color="#002F6C" text @click="closeDelete"
+											>Cancelar</v-btn
+										>
+										<v-btn color="#002F6C" text @click="deleteItemConfirm"
+											>Borrar Aviso</v-btn
+										>
+										<v-spacer></v-spacer>
+									</v-card-actions>
+								</v-card>
+							</v-dialog>
+
 							<v-divider></v-divider><br />
 						</div>
 
@@ -102,92 +167,69 @@
 			return {
 				//apps: [],
 				flex: "3",
+				overflow: "",
+				dialog: false,
+				editedIndex: -1,
+				valid: true,
+
+				titleRules: [
+					v => !!v || "El aviso debe tener un título",
+					v => (v && v.length <= 40) || "Debe tener menos de 40 caracteres",
+				],
+				messageRules: [
+					v => !!v || "El aviso debe tener un mensaje",
+					v => (v && v.length <= 320) || "Debe tener menos de 320 caracteres",
+				],
 				photoURL: "",
 				displayName: "",
 				email: "",
-				items: ["Aviso", "Error", "Informacion"],
+				types: [
+					{
+						name: "Aviso",
+						color: "#fae73e",
+					},
+					{
+						name: "Error",
+						color: "#ff153c",
+					},
+					{
+						name: "Informacion",
+						color: "#64acfe",
+					},
+				],
+				defaultItem: {
+					title: "",
+					text: "",
+					color: "",
+				},
+				editedItem: {
+					title: "",
+					text: "",
+					color: "",
+				},
 				avisos: [
 					{
 						title: "Aviso 1",
 						text:
 							"Aqui va aviso 1. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
-						color: "00000",
-						tipe: "miau",
-					},
-					{
-						title: "Aviso 2",
-						text:
-							"Aqui va aviso 2. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
-						color: "00000",
-						tipe: "miau",
-					},
-					{
-						title: "Aviso 3",
-						text:
-							"Aqui va aviso 3. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
-						color: "00000",
-						tipe: "miau",
-					},
-				],
-				apps: [
-					{
-						name: "Rol",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Avisos",
-						url: "avisos",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 3",
-						url: "UWU",
-						imgdir:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/icone-youtube-branco-png-6.png",
-					},
-					{
-						name: "Aplicacion 4",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 5",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 6",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 7",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 8",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 9",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 10",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 11",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						color: "blue lighten-2",
 					},
 				],
 			};
+		},
+		computed: {
+			formTitle() {
+				return this.editedIndex === -1 ? "Nuevo Aviso" : "Editar Aviso";
+			},
+		},
+
+		watch: {
+			dialog(val) {
+				val || this.close();
+			},
+			dialogDelete(val) {
+				val || this.closeDelete();
+			},
 		},
 		created() {
 			const user = firebase.auth().currentUser;
@@ -205,30 +247,78 @@
 				this.item = item;
 				this.$router.push({ path: item });
 			},
+			save() {
+				if (this.editedIndex > -1) {
+					Object.assign(this.avisos[this.editedIndex], this.editedItem);
+				} else {
+					this.avisos.push(this.editedItem);
+					this.editedItem = Object.assign({}, this.defaultItem);
+				}
+				this.close();
+			},
+			editItem(item) {
+				this.editedIndex = this.avisos.indexOf(item);
+				this.editedItem = Object.assign({}, item);
+				this.dialog = true;
+			},
+
+			deleteItem(item) {
+				this.editedIndex = this.avisos.indexOf(item);
+				this.editedItem = Object.assign({}, item);
+				this.dialogDelete = true;
+			},
+
+			deleteItemConfirm() {
+				this.avisos.splice(this.editedIndex, 1);
+				this.closeDelete();
+			},
+
+			close() {
+				this.dialog = false;
+				this.$nextTick(() => {
+					this.editedItem = Object.assign({}, this.defaultItem);
+					this.editedIndex = -1;
+				});
+			},
+
+			closeDelete() {
+				this.dialogDelete = false;
+				this.$nextTick(() => {
+					this.editedItem = Object.assign({}, this.defaultItem);
+					this.editedIndex = -1;
+				});
+			},
 		},
 	};
 </script>
 
 <style lang="scss" scoped>
-	.rounded {
-		border-radius: 50%;
+	.textblock {
+		margin-top: 70px;
+		padding: 25px;
+		text-align: justify;
 	}
-
-	.topspace {
-		margin-top: 2rem;
-		margin-bottom: -15px;
-	}
-
-	.capitalizar {
-		text-transform: capitalize;
-	}
-
-	.size {
-		height: 25px;
-		width: 25px;
-	}
-
 	.overflow-y {
 		overflow-y: auto;
+	}
+	.right-buttons {
+		text-align: right;
+		padding: 10px;
+	}
+	.justify-text {
+		margin-left: 10px;
+		margin-right: 10px;
+
+		text-align: justify;
+	}
+	h2 {
+		padding: 10px;
+		margin-top: 10px;
+		text-align: left;
+		margin-bottom: 10px;
+		color: #ffffff;
+	}
+	.padding {
+		padding: 25px;
 	}
 </style>
