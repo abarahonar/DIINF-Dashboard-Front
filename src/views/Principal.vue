@@ -1,6 +1,6 @@
 <template>
 	<div class="login">
-		<NabBar0 />
+		<NabBar />
 		<div id="general"></div>
 
 		<v-container class="grey lighten-6">
@@ -16,30 +16,20 @@
 							<br /><br /><br /><br /><br />
 							<br />
 							<v-btn rounded color="#002F6C" dark @click="login">
-								Iniciar sesión como estudiante
+								Iniciar sesión
 							</v-btn>
 							<br /><br />
-
-							<div id="right">
-								<v-btn icon fab x-small router-link to="/adminLogin">
-									<v-icon>mdi-wrench</v-icon>
-								</v-btn>
-							</div>
 						</div>
 					</v-card>
 				</v-col>
 				<v-col cols="8">
+					<v-card>
+						<v-card color="#ff153c" flat><h2>Ejemplo de aviso</h2></v-card>
+						<div class="justify-text">
+							Mensaje...
+						</div>
+					</v-card>
 					<div id="textblock">
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry's standard dummy text
-						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled it to make a type specimen book. It has survived not
-						only five centuries, but also the leap into electronic typesetting,
-						remaining essentially unchanged. It was popularised in the 1960s
-						with the release of Letraset sheets containing Lorem Ipsum passages,
-						and more recently with desktop publishing software like Aldus
-						PageMaker including versions of Lorem Ipsum.
-						<br />
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry's standard dummy text
 						ever since the 1500s, when an unknown printer took a galley of type
@@ -84,12 +74,12 @@
 
 <script>
 	import firebase from "firebase";
-	import NabBar0 from "@/components/Nav_Bar.vue";
+	import NabBar from "@/components/Nav_BarUser.vue";
 
 	export default {
 		name: "login",
 		components: {
-			NabBar0,
+			NabBar,
 		},
 		data() {
 			return {};
@@ -113,4 +103,25 @@
 	};
 </script>
 
-<style scoped></style>
+<style scoped>
+	.justify-text {
+		margin-left: 10px;
+		margin-right: 10px;
+
+		text-align: justify;
+	}
+	h2 {
+		padding: 10px;
+		margin-top: 10px;
+		text-align: left;
+		margin-bottom: 10px;
+		color: #ffffff;
+	}
+	#textblock {
+		padding: 15px;
+		text-align: justify;
+	}
+	.padding {
+		padding: 25px;
+	}
+</style>

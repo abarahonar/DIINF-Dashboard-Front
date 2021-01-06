@@ -6,8 +6,8 @@ import VueRouter from 'vue-router'
 
 import Principal from '../views/Principal.vue'
 import Principal_Admin from '../views/Principal_Admin.vue'
-import Landing_User from '../views/Landing_User.vue'
-import Landing_Admin from '../views/Landing_Admin.vue'
+import Landing from '../views/Landing.vue'
+
 import Rol from '../views/Rol.vue'
 import Avisos from '../views/Avisos.vue'
 
@@ -27,17 +27,12 @@ const routes = [
     path: '/adminlogin',
     name: 'PrincipalAdmin',
     component: Principal_Admin
-  },
-  {
+  },{
     path: '/landing',
-    name: 'LandingUser',
-    component: Landing_User
+    name: 'Landing',
+    component: Landing
   },
-  {
-    path: '/landinga',
-    name: 'LandingAdmin',
-    component: Landing_Admin
-  },
+  
   {
     path: '/rol',
     name: 'Rol',

@@ -8,6 +8,7 @@
 			<v-menu offset-y>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn
+						v-show="isOn === true"
 						depressed
 						color="#EA7600"
 						dark
@@ -23,8 +24,12 @@
 					</v-btn>
 				</template>
 				<v-list>
-					<v-list-item v-for="(item, index) in items" :key="index">
-						<v-btn depressed block router-link to="/">
+					<v-list-item
+						v-for="(item, index) in items"
+						:key="index"
+						v-show="isAdmin === item.admin || item.admin === false"
+					>
+						<v-btn depressed block router-link :href="item.path">
 							{{ item.title }}
 						</v-btn>
 					</v-list-item>
@@ -37,15 +42,19 @@
 <script>
 	export default {
 		name: "NabBarUser",
+
 		props: {
 			photoURL: String,
 			displayName: String,
+			isAdmin: Boolean,
+			isOn: Boolean,
 		},
 		data: () => ({
 			items: [
-				{ title: "Inicio", path: "" },
-				{ title: "Información personal", path: "" },
-				{ title: "Cerrar sesión", path: "" },
+				{ title: "Aplicaciones", path: "landing", admin: false },
+				{ title: "Avisos", path: "avisos", admin: true },
+				{ title: "Roles", path: "rol", admin: true },
+				{ title: "Cerrar sesión", path: "/", admin: false },
 			],
 		}),
 	};

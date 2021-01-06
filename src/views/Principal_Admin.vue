@@ -1,6 +1,5 @@
 <template>
 	<div class="Principaladmin">
-		<NabBar0 />
 		<div id="general"></div>
 		<v-container class="grey lighten-6">
 			<v-row no-gutters>
@@ -68,7 +67,7 @@
 				</v-col>
 			</v-row>
 
-			<v-footer padless fixed>
+			<v-footer padless>
 				<v-card
 					flat
 					color="#EA7600"
@@ -88,31 +87,16 @@
 </template>
 
 <script>
-	import firebase from "firebase";
-	import NabBar0 from "@/components/Nav_Bar.vue";
-
 	export default {
 		name: "login_Admin",
-		components: {
-			NabBar0,
-		},
+
 		data() {
 			return {};
 		},
 		methods: {
-			login: function() {
-				const provider = new firebase.auth.GoogleAuthProvider();
-
-				firebase
-					.auth()
-					.signInWithPopup(provider)
-					.then(result => {
-						this.$router.replace("/landingA");
-						console.log(result);
-					})
-					.catch(err => {
-						alert("Oops. " + err.message);
-					});
+			login_admin: function() {
+				window.location.href =
+					"https://auth.testing.com:1024?origin=https://dashboard.testing.com:8080";
 			},
 		},
 	};
