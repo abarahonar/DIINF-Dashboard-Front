@@ -28,7 +28,7 @@
 						<v-form ref="form" v-model="valid" lazy-validation>
 							<div class="padding">
 								<v-text-field
-									v-model="editedItem.title"
+									v-model="editedItem.name"
 									:counter="40"
 									:rules="titleRules"
 									label="Nombre Rol"
@@ -43,7 +43,7 @@
 									color="blue-grey lighten-2"
 									label="Aplicaciones"
 									item-text="name"
-									item-value="name"
+									return-object
 									multiple
 								>
 									<template v-slot:selection="data">
@@ -54,7 +54,7 @@
 											@click="data.select"
 											@click:close="remove(data.item)"
 										>
-											{{ data.item.app }}
+											{{ data.item.name }}
 										</v-chip>
 									</template>
 									<template v-slot:item="data">
@@ -66,7 +66,7 @@
 										<template v-else>
 											<v-list-item-content>
 												<v-list-item-title
-													v-html="data.item.app"
+													v-html="data.item.name"
 												></v-list-item-title>
 											</v-list-item-content>
 										</template>
@@ -77,7 +77,7 @@
 									Cancelar
 								</v-btn>
 								<v-btn color="#002F6C" :disabled="!valid" text @click="save">
-									Guardar Aviso
+									Guardar
 								</v-btn>
 							</div>
 						</v-form>
@@ -95,7 +95,7 @@
 							<v-spacer></v-spacer>
 							<v-btn color="#002F6C" text @click="closeDelete">Cancelar</v-btn>
 							<v-btn color="#002F6C" text @click="deleteItemConfirm"
-								>Borrar Aviso</v-btn
+								>Borrar Rol</v-btn
 							>
 							<v-spacer></v-spacer>
 						</v-card-actions>
@@ -112,14 +112,14 @@
 					<v-card-text>
 						<v-col v-for="a in avisos" :key="a.name" :cols="12">
 							<v-card>
-								<v-card :color="a.color" flat
-									><h2>{{ a.title }}</h2></v-card
+								<v-card :color="color" flat
+									><h2>{{ a.name }}</h2></v-card
 								>
 								<div class="justify-text">
 									Aplicaciones:
 									<br />
-									<v-chip v-for="app in a.Apps" :key="app.app">
-										<strong>{{ app.app }}</strong>
+									<v-chip v-for="app in a.Apps" :key="app.id">
+										<strong>{{ app.name }}</strong>
 									</v-chip>
 								</div>
 								<div class="right-buttons">
@@ -175,9 +175,9 @@
 				dialog: false,
 				editedIndex: -1,
 				valid: true,
-
-				titleRules: [
-					v => !!v || "El rol debe tener un título",
+				color: "#b1b1b1",
+				nameRules: [
+					v => !!v || "El rol debe tener un nombre",
 					v => (v && v.length <= 40) || "Debe tener menos de 40 caracteres",
 				],
 
@@ -186,50 +186,61 @@
 				email: "",
 
 				listApp: [
-					{ app: "App finanzas" },
-					{ app: "App matlab" },
-					{ app: "App agenda" },
-					{ app: "App Solicitud Salas Dinf" },
-					{ app: "App Administracion" },
-					{ app: "App Servidores" },
+					{
+						_id: "123ad",
+						name: "Calendario",
+						url: "rol",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+					},
+					{
+						_id: "123fffsd",
+						name: "Datos curriculares",
+						url: "rol",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+					},
+					{
+						_id: "123",
+						name: "Finanzas",
+						url: "rol",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+					},
+					{
+						_id: "123",
+						name: "App Prueba",
+						url: "rol",
+						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+					},
 				],
 				defaultItem: {
-					title: "",
+					name: "",
 					text: "",
-					color: "#b1b1b1",
+
 					Apps: [],
 				},
 				editedItem: {
-					title: "",
+					name: "",
 					text: "",
-					color: "#b1b1b1",
+
 					Apps: [],
 				},
 
 				avisos: [
 					{
-						title: "Estudiantes",
-						text: "Estudiantes :) ",
-						color: "#b1b1b1",
-						Apps: [{ app: "App agenda" }, { app: "App matlab" }],
+						name: "Estudiantes",
+
+						Apps: [{ name: "Calendario" }],
 					},
 					{
-						title: "Administración",
-						text: "aaapppsss ",
-						color: "#b1b1b1",
-						Apps: [
-							{ app: "App agenda" },
-							{ app: "App finanzas" },
-							{ app: "App Servidores" },
-							{ app: "App Administracion" },
-						],
+						name: "Administración",
+
+						Apps: [{ name: "Finanzas" }, { name: "Datos curriculares" }],
 					},
 				],
 			};
 		},
 		computed: {
 			formTitle() {
-				return this.editedIndex === -1 ? "Nuevo Aviso" : "Editar Aviso";
+				return this.editedIndex === -1 ? "Nuevo Rol" : "Editar Rol";
 			},
 		},
 
@@ -247,11 +258,15 @@
 			this.email = user.email;
 			this.photoURL = user.photoURL;
 		},
-		mounted() {
-			axios
-				.get("http://localhost:80/list-apps")
-				.then(response => (this.apps = response.data));
-		},
+		//mounted() {
+		//axios
+		//	.get("http://localhost:80/list-roles")
+		//	.then(response => (this.avisos = response.data));
+		//axios
+		//	.get("http://localhost:80/list-apps")
+		//	.then(response => (this.listApp = response.data));
+		//},
+
 		methods: {
 			remove(item) {
 				const index = this.editedItem.Apps.indexOf(item);
@@ -267,6 +282,7 @@
 					Object.assign(this.avisos[this.editedIndex], this.editedItem);
 				} else {
 					this.avisos.push(this.editedItem);
+					axios.post("https://localhost/create-role", this.editedItem);
 					this.editedItem = Object.assign({}, this.defaultItem);
 				}
 				this.close();

@@ -8,8 +8,8 @@
 		/>
 		<v-container class="grey lighten-6">
 			<v-app id="generalPage">
-				<h1>Landing page</h1>
-				En esta vista se pueden ver las aplicaciones :)
+				<h1>Mis aplicaciones</h1>
+				Página principal
 				<br />
 
 				<v-switch
@@ -104,27 +104,28 @@
 										<img alt="imgapp" :src="a.imgdir" height="90px" /><br />
 									</a>
 									{{ a.name }}<br />
-
-									<v-btn
-										v-show="isAdmin === true"
-										color="#EA7600"
-										@click="editItem(a)"
-										fab
-										small
-										dark
-									>
-										<v-icon>mdi-pencil</v-icon>
-									</v-btn>
-									<v-btn
-										v-show="isAdmin === true"
-										color="#EA7600"
-										@click="deleteItem(a)"
-										fab
-										small
-										dark
-									>
-										<v-icon>mdi-delete</v-icon>
-									</v-btn>
+									<div class="right-buttons">
+										<v-btn
+											v-show="isAdmin === true"
+											icon
+											@click="editItem(a)"
+											fab
+											small
+											flat
+										>
+											<v-icon>mdi-pencil</v-icon>
+										</v-btn>
+										<v-btn
+											v-show="isAdmin === true"
+											icon
+											@click="deleteItem(a)"
+											fab
+											flat
+											small
+										>
+											<v-icon>mdi-delete</v-icon>
+										</v-btn>
+									</div>
 
 									<br /><br />
 								</v-card>
@@ -154,7 +155,7 @@
 
 <script>
 	import firebase from "firebase";
-	import axios from "axios";
+	//import axios from "axios";
 	import NabBarUser from "@/components/Nav_BarUser.vue";
 
 	export default {
@@ -164,7 +165,6 @@
 		},
 		data() {
 			return {
-				//apps: [],
 				isAdmin: true,
 				isOn: true,
 				dialog: false,
@@ -177,11 +177,13 @@
 				dirRules: [v => !!v || "Debe escribir la dirección de la Aplicación "],
 				urlRules: [v => !!v || "Debe escribir la URL de la imagen "],
 				editedItem: {
+					_id: "",
 					name: "",
 					url: "",
 					imgdir: "",
 				},
 				defaultItem: {
+					_id: "",
 					name: "",
 					url: "",
 					imgdir: "",
@@ -192,61 +194,34 @@
 				email: "",
 				apps: [
 					{
-						name: "Rol",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Avisos",
-						url: "avisos",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 3",
-						url: "UWU",
+						_id: "123",
+						name: "Calendario",
+						url: "Calendario",
 						imgdir:
-							"http://vaibs.com.mx/wp-content/uploads/2020/05/icone-youtube-branco-png-6.png",
+							"https://visualpharm.com/assets/397/Calendar-595b40b85ba036ed117dbf57.svg",
 					},
 					{
-						name: "Aplicacion 4",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						_id: "234",
+						name: "Datos curriculares",
+						url: "DatosCurr",
+						imgdir:
+							"https://static.vecteezy.com/system/resources/previews/000/420/252/non_2x/vector-document-in-folder-icon.jpg",
 					},
 					{
-						name: "Aplicacion 5",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+						_id: "1s1d1asd",
+						name: "Finanzas",
+						url: "finanzas",
+						imgdir: "https://flyclipart.com/thumb2/book-icon-569908.png",
 					},
-					{
-						name: "Aplicacion 6",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
+{
+						_id: "12333333",
+						name: "Notas",
+						url: "finanzas",
+						imgdir: "http://simpleicon.com/wp-content/uploads/pencil.png",
 					},
-					{
-						name: "Aplicacion 7",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 8",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 9",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 10",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						name: "Aplicacion 11",
-						url: "UWU",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
+
+
+					
 				],
 			};
 		},
@@ -275,9 +250,9 @@
 			this.initialize();
 		},
 		mounted() {
-			axios
-				.get("http://localhost:80/list-apps")
-				.then(response => (this.apps = response.data));
+			//axios
+			//	.get("http://localhost:80/list-apps")
+			//	.then(response => (this.apps = response.data));
 		},
 		methods: {
 			goto(item) {
@@ -320,6 +295,12 @@
 			save() {
 				if (this.editedIndex > -1) {
 					Object.assign(this.apps[this.editedIndex], this.editedItem);
+					//this.$http.put("/create-app/" + this.editedItem._id, {
+					//	_id: this.editedItem.id,
+					//	name: this.editedItem.name,
+					//	url: this.editedItem.url,
+					//	imgdir: this.editedItem.imgUrl,
+					//});
 				} else {
 					this.apps.push(this.editedItem);
 				}
@@ -340,5 +321,9 @@
 	}
 	.padding {
 		padding: 25px;
+	}
+	.right-buttons {
+		text-align: right;
+		padding: 10px;
 	}
 </style>

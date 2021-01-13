@@ -23,12 +23,6 @@
 					</v-card>
 				</v-col>
 				<v-col cols="8">
-					<v-card>
-						<v-card color="#ff153c" flat><h2>Ejemplo de aviso</h2></v-card>
-						<div class="justify-text">
-							Mensaje...
-						</div>
-					</v-card>
 					<div id="textblock">
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry's standard dummy text
@@ -118,7 +112,7 @@
 		color: #ffffff;
 	}
 	#textblock {
-		padding: 15px;
+		padding: 25px;
 		text-align: justify;
 	}
 	.padding {

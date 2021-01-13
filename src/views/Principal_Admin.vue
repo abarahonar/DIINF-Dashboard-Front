@@ -96,7 +96,7 @@
 		methods: {
 			login_admin: function() {
 				window.location.href =
-					"https://auth.testing.com:1024?origin=https://dashboard.testing.com:8080";
+					"https://auth.catteam.tk?origin=https://dashboard.catteam.tk:8080";
 			},
 		},
 	};
