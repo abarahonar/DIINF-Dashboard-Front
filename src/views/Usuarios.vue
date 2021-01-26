@@ -8,15 +8,22 @@
 		/>
 		<v-container class="grey lighten-6">
 			<v-app id="generalPage">
-				<h1>Roles</h1>
+				<h1>Usuarios</h1>
 
-				Vista de Roles<br />
-				Crear, editar y borrar un rol. Asignar aplicaciones.
+				Vista de Usuarios<br />
+				Asignar Roles y Activar/Desactivar cuenta.
 				<br /><br /><br /><br /><br /><br />
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
-						<v-btn dark class="ma-2" color="#002F6C" v-bind="attrs" v-on="on">
-							Crear nuevo Rol
+						<v-btn
+							disabled
+							dark
+							class="ma-2"
+							color="#002F6C"
+							v-bind="attrs"
+							v-on="on"
+						>
+							Crear Usuario
 						</v-btn>
 						<br />
 					</template>
@@ -27,21 +34,20 @@
 
 						<v-form ref="form" v-model="valid" lazy-validation>
 							<div class="padding">
-								<v-text-field
-									v-model="editedItem.name"
-									:counter="40"
-									:rules="titleRules"
-									label="Nombre Rol"
-									required
-								></v-text-field>
+								{{ editedItem.name }} - {{ editedItem.email }}
 
+								<v-checkbox
+									v-model="editedItem.active"
+									color="success"
+									label="Usuario activo"
+								></v-checkbox>
 								<v-autocomplete
-									v-model="editedItem.Apps"
+									v-model="editedItem.roles"
 									:items="listApp"
 									filled
 									chips
 									color="blue-grey lighten-2"
-									label="Aplicaciones"
+									label="Roles"
 									item-text="name"
 									return-object
 									multiple
@@ -87,15 +93,15 @@
 				<v-dialog v-model="dialogDelete" max-width="500px">
 					<v-card>
 						<v-toolbar color="#EA7600" dark flat>
-							<v-toolbar-title>Borrar Aplicación</v-toolbar-title>
+							<v-toolbar-title>Borrar Usuario</v-toolbar-title>
 						</v-toolbar>
 						<br />
-						¿Seguro que quiere eliminar este Rol?
+						¿Seguro que quiere eliminar este Usuario?
 						<v-card-actions>
 							<v-spacer></v-spacer>
 							<v-btn color="#002F6C" text @click="closeDelete">Cancelar</v-btn>
 							<v-btn color="#002F6C" text @click="deleteItemConfirm"
-								>Borrar Rol</v-btn
+								>Borrar Usuario</v-btn
 							>
 							<v-spacer></v-spacer>
 						</v-card-actions>
@@ -109,33 +115,33 @@
 					tile
 					max-height="708px"
 				>
-					<v-card-text>
-						<v-col v-for="a in avisos" :key="a.name" :cols="12">
-							<v-card>
-								<v-card :color="color" flat
-									><h2>{{ a.name }}</h2></v-card
-								>
-								<div class="justify-text">
-									Aplicaciones:
-									<br />
-									<v-chip v-for="app in a.Apps" :key="app.id">
-										<strong>{{ app.name }}</strong>
-									</v-chip>
-								</div>
-								<div class="right-buttons">
-									<v-btn icon @click="editItem(a)" fab small flat>
-										<v-icon>mdi-pencil</v-icon>
-									</v-btn>
-									<v-btn icon @click="deleteItem(a)" fab flat small>
-										<v-icon>mdi-delete</v-icon>
-									</v-btn>
-								</div>
-							</v-card>
-						</v-col>
-					</v-card-text>
+					<v-data-table
+						:headers="headers"
+						:items="usuarios"
+						sort-by="name"
+						class="elevation-1"
+					>
+						<template v-slot:item.roles="{ item }">
+							<v-chip v-for="rol in item.roles" :key="rol.id">
+								<strong>{{ rol.name }}</strong>
+							</v-chip>
+						</template>
+						<template v-slot:item.active="{ item }">
+							<v-chip :color="getColor(item.active)" dark> </v-chip>
+						</template>
+						<template v-slot:item.actions="{ item }">
+							<v-icon small class="mr-2" @click="editItem(item)">
+								mdi-pencil
+							</v-icon>
+							<v-icon small @click="deleteItem(item)">
+								mdi-delete
+							</v-icon>
+						</template>
+					</v-data-table>
 				</v-card>
 			</v-app>
 		</v-container>
+
 		<v-footer padless>
 			<v-card
 				flat
@@ -160,12 +166,23 @@
 	export default {
 		name: "Home",
 		components: {
-			//MenuUser,
 			NabBarUser,
 		},
 		data() {
 			return {
-				//apps: [],
+				headers: [
+					{
+						text: "Nombre",
+						align: "start",
+						sortable: false,
+						value: "name",
+					},
+					{ text: "Correo", value: "email" },
+					{ text: "Roles", value: "roles" },
+					{ text: "Activo", value: "active" },
+
+					{ text: "Acciones", value: "actions", sortable: false },
+				],
 				isAdmin: true,
 				isOn: true,
 				flex: "3",
@@ -175,10 +192,13 @@
 				valid: true,
 				color: "#b1b1b1",
 				nameRules: [
-					v => !!v || "El rol debe tener un nombre",
+					v => !!v || "El Usuario debe tener un nombre",
 					v => (v && v.length <= 40) || "Debe tener menos de 40 caracteres",
 				],
-
+				emailRules: [
+					v => !!v || "El Usuario debe tener un Correo",
+					v => (v && v.length <= 35) || "Debe tener menos de 35 caracteres",
+				],
 				photoURL: "",
 				displayName: "",
 				email: "",
@@ -186,60 +206,55 @@
 				listApp: [
 					{
 						_id: "123ad",
-						name: "Calendario",
+						name: " Estudiante ",
 						url: "rol",
 						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						_id: "123fffsd",
-						name: "Datos curriculares",
+						name: "Administrador",
 						url: "rol",
 						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 					{
 						_id: "123",
-						name: "Finanzas",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123",
-						name: "App Prueba",
+						name: "Profesor",
 						url: "rol",
 						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
 					},
 				],
 				defaultItem: {
 					name: "",
-					text: "",
-
-					Apps: [],
+					email: "",
+					active: true,
+					roles: [],
 				},
 				editedItem: {
 					name: "",
-					text: "",
-
-					Apps: [],
+					email: "",
+					active: true,
+					roles: [],
 				},
 
-				avisos: [
-					/*
+				usuarios: [
 					{
-						name: "Estudiantes",
-
-						Apps: [{ name: "Calendario" }],
+						name: "Juanito Hernández",
+						email: "Juanito.hernandez@usach.cl",
+						active: true,
+						roles: [],
 					},
 					{
-						name: "Administración",
-
-						Apps: [{ name: "Finanzas" }, { name: "Datos curriculares" }],
-					},*/
+						name: "Lucia García",
+						email: "Lucia.Garcia@usach.cl",
+						active: true,
+						roles: [],
+					},
 				],
 			};
 		},
 		computed: {
 			formTitle() {
-				return this.editedIndex === -1 ? "Nuevo Rol" : "Editar Rol";
+				return this.editedIndex === -1 ? "Nuevo Usuario" : "Editar Usuario";
 			},
 		},
 
@@ -270,16 +285,20 @@
 		//mounted() {
 		//axios
 		//	.get("http://localhost:80/list-roles")
-		//	.then(response => (this.avisos = response.data));
+		//	.then(response => (this.usuarios = response.data));
 		//axios
 		//	.get("http://localhost:80/list-apps")
 		//	.then(response => (this.listApp = response.data));
 		//},
 
 		methods: {
+			getColor(active) {
+				if (active == true) return "green";
+				else return "red";
+			},
 			remove(item) {
-				const index = this.editedItem.Apps.indexOf(item);
-				if (index >= 0) this.editedItem.Apps.splice(index, 1);
+				const index = this.editedItem.roles.indexOf(item);
+				if (index >= 0) this.editedItem.roles.splice(index, 1);
 			},
 			goto(item) {
 				this.item = item;
@@ -288,28 +307,28 @@
 
 			save() {
 				if (this.editedIndex > -1) {
-					Object.assign(this.avisos[this.editedIndex], this.editedItem);
+					Object.assign(this.usuarios[this.editedIndex], this.editedItem);
 				} else {
-					this.avisos.push(this.editedItem);
+					this.usuarios.push(this.editedItem);
 					//axios.post("https://localhost/create-role", this.editedItem);
 					this.editedItem = Object.assign({}, this.defaultItem);
 				}
 				this.close();
 			},
 			editItem(item) {
-				this.editedIndex = this.avisos.indexOf(item);
+				this.editedIndex = this.usuarios.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialog = true;
 			},
 
 			deleteItem(item) {
-				this.editedIndex = this.avisos.indexOf(item);
+				this.editedIndex = this.usuarios.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialogDelete = true;
 			},
 
 			deleteItemConfirm() {
-				this.avisos.splice(this.editedIndex, 1);
+				this.usuarios.splice(this.editedIndex, 1);
 				this.closeDelete();
 			},
 
@@ -357,6 +376,13 @@
 		text-align: left;
 		margin-bottom: 10px;
 		color: #ffffff;
+	}
+	h3 {
+		padding: 10px;
+		margin-top: 10px;
+		text-align: left;
+		margin-bottom: 10px;
+		color: #404e61;
 	}
 	.padding {
 		padding: 25px;

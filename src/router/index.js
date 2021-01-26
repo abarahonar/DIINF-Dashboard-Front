@@ -1,18 +1,13 @@
 import Vue from 'vue'
 import firebase from 'firebase'
 import VueRouter from 'vue-router'
-
-
-
 import Principal from '../views/Principal.vue'
 import Principal_Admin from '../views/Principal_Admin.vue'
 import Landing from '../views/Landing.vue'
-
 import Rol from '../views/Rol.vue'
 import Avisos from '../views/Avisos.vue'
 
-//import Login from '../views/Login.vue'
-//import Error from '../views/Error.vue'
+import Usuarios from '../views/Usuarios.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +37,11 @@ const routes = [
     path: '/Avisos',
     name: 'Avisos',
     component: Avisos
+  },
+  {
+    path: '/Usuarios',
+    name: 'Usuarios',
+    component: Usuarios
   },
 ]
 

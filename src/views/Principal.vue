@@ -7,6 +7,7 @@
 			<v-row no-gutters>
 				<v-col cols="4">
 					<h1>Aplicaciones DIINF</h1>
+					<br />
 
 					<v-card class="pa-2" tile outlined height="300px">
 						<br />
@@ -24,6 +25,58 @@
 				</v-col>
 				<v-col cols="8">
 					<div id="textblock">
+						<v-card color="#b6a9a8">
+							<div class="right">
+								<v-badge color="#f82f25" overlap>
+									<v-btn elevation="0" @click="v0 = !v0" color="#b6a9a8" dark>
+										Avisos
+									</v-btn>
+								</v-badge>
+							</div>
+						</v-card>
+
+						<v-banner
+							v-for="a in avisos"
+							:key="a.name"
+							two-line
+							v-model="v0"
+							transition="slide-y-transition"
+						>
+							<v-avatar slot="icon" color="deep-purple accent-4" size="40">
+								<v-icon icon="mdi-lock" large color="white">
+									mdi-information-outline
+								</v-icon>
+							</v-avatar>
+
+							<h3>
+								{{ a.title }}
+							</h3>
+							<div class="justify-text">
+								{{ a.text }}
+							</div>
+							<div class="right-buttons">
+								11 de Enero de 2021
+							</div>
+						</v-banner>
+					</div>
+					<div id="textblock" v-if="v0">
+						<v-col v-for="a in avisos" :key="a.name" :cols="12">
+							<v-card>
+								<v-card color="#b6a9a8" flat>
+									<h2>
+										{{ a.title }}
+									</h2></v-card
+								>
+								<div class="justify-text">
+									{{ a.text }}
+								</div>
+								<div class="right-buttons">
+									11 de Enero de 2021
+								</div>
+							</v-card>
+						</v-col>
+					</div>
+					<div id="textblock" v-if="!v0">
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry's standard dummy text
 						ever since the 1500s, when an unknown printer took a galley of type
@@ -47,6 +100,7 @@
 					</div>
 				</v-col>
 			</v-row>
+
 			<v-footer padless fixed>
 				<v-card
 					flat
@@ -67,32 +121,48 @@
 </template>
 
 <script>
-	import firebase from "firebase";
 	import NabBar from "@/components/Nav_BarUser.vue";
 
 	export default {
 		name: "login",
+
 		components: {
 			NabBar,
 		},
-		data() {
-			return {};
-		},
+		data: () => ({
+			v0: true,
+			avisos: [
+				{
+					title: "Aviso 1",
+					text:
+						"Aqui va aviso 1. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
+					color: "blue lighten-2",
+				},
+			],
+		}),
 		methods: {
 			login: function() {
-				const provider = new firebase.auth.GoogleAuthProvider();
-
-				firebase
-					.auth()
-					.signInWithPopup(provider)
-					.then(result => {
-						this.$router.replace("/landing");
-						console.log(result);
-					})
-					.catch(err => {
-						alert("Oops. " + err.message);
-					});
+				window.location.href =
+					"https://auth.catteam.tk?origin=https://dashboard.catteam.tk";
 			},
+		},
+		async beforeCreate() {
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const logIn = urlParams.get("loggedIn");
+			console.log(logIn);
+			//Redireccionar a la vista de aplicaciones si es true
+			//En caso de que sea null puede que el usuario ya este registrado y sea necesario...
+			let res = await fetch("https://back.catteam.tk/verify", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.ok) {
+				console.log(res.status);
+			}
+			if (res.status == 200) {
+				this.$router.push("/landing");
+			}
 		},
 	};
 </script>
@@ -111,11 +181,35 @@
 		margin-bottom: 10px;
 		color: #ffffff;
 	}
+	h3 {
+		padding: 6px;
+		margin-top: 6px;
+		text-align: left;
+		margin-bottom: 6px;
+		color: #4d4949;
+	}
 	#textblock {
-		padding: 25px;
+		padding: 15px;
 		text-align: justify;
 	}
 	.padding {
-		padding: 25px;
+		padding: 15px;
+	}
+	#create .v-speed-dial {
+		position: absolute;
+	}
+	.right-buttons {
+		text-align: right;
+		padding: 5px;
+	}
+	.right {
+		text-align: right;
+		padding: 2px;
+	}
+	.justify-text {
+		margin-left: 10px;
+		margin-right: 10px;
+
+		text-align: justify;
 	}
 </style>

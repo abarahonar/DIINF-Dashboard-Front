@@ -29,7 +29,7 @@
 						:key="index"
 						v-show="isAdmin === item.admin || item.admin === false"
 					>
-						<v-btn depressed block router-link :href="item.path">
+						<v-btn depressed block router-link @click="goto(item.path)">
 							{{ item.title }}
 						</v-btn>
 					</v-list-item>
@@ -54,9 +54,37 @@
 				{ title: "Aplicaciones", path: "landing", admin: false },
 				{ title: "Avisos", path: "avisos", admin: true },
 				{ title: "Roles", path: "rol", admin: true },
+				{ title: "Usuarios", path: "usuarios", admin: true },
 				{ title: "Cerrar sesión", path: "/", admin: false },
 			],
 		}),
+		methods: {
+			redirect(item) {
+				this.item = item;
+				this.$router.push({ path: item });
+			},
+
+			async logOut() {
+				let res = await fetch("https://back.catteam.tk/logout", {
+					method: "delete",
+					credentials: "include",
+				});
+				if (res.ok) {
+					console.log("Del done");
+					this.$router.push("/");
+				}
+			},
+			goto(item) {
+				this.item = item;
+				if (this.item == "/") {
+					console.log("Del done");
+					this.logOut();
+					this.redirect(item);
+				} else {
+					this.redirect(item);
+				}
+			},
+		},
 	};
 </script>
 

@@ -154,8 +154,6 @@
 </template>
 
 <script>
-	import firebase from "firebase";
-	//import axios from "axios";
 	import NabBarUser from "@/components/Nav_BarUser.vue";
 
 	export default {
@@ -165,8 +163,11 @@
 		},
 		data() {
 			return {
-				isAdmin: true,
+				isAdmin: true, //Pedirselo al kevin
 				isOn: true,
+
+				photoURL: "",
+				displayName: "",
 				dialog: false,
 				editedIndex: -1,
 				valid: true,
@@ -189,40 +190,8 @@
 					imgdir: "",
 				},
 				flex: "3",
-				photoURL: "",
-				displayName: "",
-				email: "",
-				apps: [
-					{
-						_id: "123",
-						name: "Calendario",
-						url: "Calendario",
-						imgdir:
-							"https://visualpharm.com/assets/397/Calendar-595b40b85ba036ed117dbf57.svg",
-					},
-					{
-						_id: "234",
-						name: "Datos curriculares",
-						url: "DatosCurr",
-						imgdir:
-							"https://static.vecteezy.com/system/resources/previews/000/420/252/non_2x/vector-document-in-folder-icon.jpg",
-					},
-					{
-						_id: "1s1d1asd",
-						name: "Finanzas",
-						url: "finanzas",
-						imgdir: "https://flyclipart.com/thumb2/book-icon-569908.png",
-					},
-{
-						_id: "12333333",
-						name: "Notas",
-						url: "finanzas",
-						imgdir: "http://simpleicon.com/wp-content/uploads/pencil.png",
-					},
-
-
-					
-				],
+				//user: {},
+				apps: [],
 			};
 		},
 		computed: {
@@ -242,19 +211,32 @@
 			},
 		},
 
-		created() {
-			const user = firebase.auth().currentUser;
-			this.displayName = user.displayName;
-			this.email = user.email;
-			this.photoURL = user.photoURL;
-			this.initialize();
-		},
-		mounted() {
-			//axios
-			//	.get("http://localhost:80/list-apps")
-			//	.then(response => (this.apps = response.data));
+		async beforeCreate() {
+			let res = await fetch("https://back.catteam.tk/verify", {
+				method: "get",
+				credentials: "include",
+			});
+
+			if (res.status != 200) {
+				this.$router.push("/");
+				//Si res status != 200 el usuario no esta logeado -> Redireccionar
+			} else {
+				const user = await res.json();
+				this.displayName = user.name;
+				this.photoURL = user.picture;
+			}
 		},
 		methods: {
+			async logOut() {
+				let res = await fetch("https://back.catteam.tk/logout", {
+					method: "delete",
+					credentials: "include",
+				});
+				if (res.ok) {
+					console.log("Del done");
+					//Redirect al login
+				}
+			},
 			goto(item) {
 				this.item = item;
 				this.$router.push({ path: item });
@@ -291,6 +273,15 @@
 					this.editedIndex = -1;
 				});
 			},
+			/*
+			    getAppvent) {
+      this.markers=event.latlng;
+      this.$http.get('localhost:8080/...,{
+        }).then(response => {
+          this.volunteerList=response.data;
+        });
+    },
+			*/
 
 			save() {
 				if (this.editedIndex > -1) {

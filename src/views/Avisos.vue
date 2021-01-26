@@ -132,14 +132,11 @@
 </template>
 
 <script>
-	import firebase from "firebase";
-	import axios from "axios";
 	import NabBarUser from "@/components/Nav_BarUser.vue";
 
 	export default {
 		name: "Home",
 		components: {
-			//MenuUser,
 			NabBarUser,
 		},
 		data() {
@@ -189,12 +186,12 @@
 					color: "",
 				},
 				avisos: [
-					{
+					/*{
 						title: "Aviso 1",
 						text:
 							"Aqui va aviso 1. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
 						color: "blue lighten-2",
-					},
+					},*/
 				],
 			};
 		},
@@ -212,17 +209,29 @@
 				val || this.closeDelete();
 			},
 		},
-		created() {
-			const user = firebase.auth().currentUser;
-			this.displayName = user.displayName;
-			this.email = user.email;
-			this.photoURL = user.photoURL;
+		created() {},
+		async mounted() {
+			let res = await fetch("https://back.catteam.tk/verify", {
+				method: "get",
+				credentials: "include",
+			});
+
+			if (res.status != 200) {
+				this.$router.push("/");
+				//Si res status != 200 el usuario no esta logeado -> Redireccionar
+			} else {
+				const user = await res.json();
+				this.displayName = user.name;
+				this.photoURL = user.picture;
+			}
 		},
+		/*
 		mounted() {
 			axios
 				.get("http://localhost:80/list-apps")
 				.then(response => (this.apps = response.data));
-		},
+		},*/
+
 		methods: {
 			goto(item) {
 				this.item = item;

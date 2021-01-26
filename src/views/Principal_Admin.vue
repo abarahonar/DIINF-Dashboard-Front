@@ -89,7 +89,7 @@
 <script>
 	export default {
 		name: "login_Admin",
-
+		v0: true,
 		data() {
 			return {};
 		},
