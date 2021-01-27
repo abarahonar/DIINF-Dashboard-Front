@@ -133,6 +133,10 @@
 						</v-row>
 					</v-card-text>
 				</v-card>
+				<h1>Esto es una prueba de que la conexion del backend con el sistema de autenticacion estan funcionando correctamente</h1>
+				<h1 v-for="(nombre_rol, i) in data_temporal.rol" :key="i">
+					{{ i + 1 }}. {{ nombre_rol }}
+				</h1>
 			</v-app>
 		</v-container>
 		<v-footer padless>
@@ -192,6 +196,8 @@
 				flex: "3",
 				//user: {},
 				apps: [],
+				//Esto es temporal
+				data_temporal: {}
 			};
 		},
 		computed: {
@@ -224,6 +230,18 @@
 				const user = await res.json();
 				this.displayName = user.name;
 				this.photoURL = user.picture;
+			}
+		},
+
+		//Temporal
+		async mounted() {
+			const res = await fetch("https://python.app.catteam.tk:444/user-apps", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.ok) {
+				this.data_temporal = await res.json();
+				console.log(this.data_temporal.rol);
 			}
 		},
 		methods: {
