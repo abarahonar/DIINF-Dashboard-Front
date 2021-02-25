@@ -2,8 +2,10 @@
 	<div class="login">
 		<NabBar />
 		<div id="general"></div>
-
-		<v-container class="grey lighten-6">
+		<div v-show="!cargando">
+			<v-progress-circular indeterminate></v-progress-circular>
+		</div>
+		<v-container class="grey lighten-6" v-show="cargando">
 			<v-row no-gutters>
 				<v-col cols="4">
 					<h1>Aplicaciones DIINF</h1>
@@ -27,75 +29,95 @@
 					<div id="textblock">
 						<v-card color="#b6a9a8">
 							<div class="right">
-								<v-badge color="#f82f25" overlap>
-									<v-btn elevation="0" @click="v0 = !v0" color="#b6a9a8" dark>
-										Avisos
-									</v-btn>
-								</v-badge>
+								<v-btn elevation="0" @click="btn_Avisos" color="#b6a9a8" dark>
+									{{ btnAvisos }}
+								</v-btn>
 							</div>
 						</v-card>
+						<div v-show="v0">
+							<v-banner
+								v-for="a in avisos"
+								:key="a.name"
+								two-line
+								v-model="v0"
+								transition="slide-y-transition"
+							>
+								<v-avatar slot="icon" color="deep-purple accent-4" size="40">
+									<v-icon icon="mdi-lock" large color="white">
+										mdi-information-outline
+									</v-icon>
+								</v-avatar>
 
-						<v-banner
-							v-for="a in avisos"
-							:key="a.name"
-							two-line
-							v-model="v0"
-							transition="slide-y-transition"
-						>
-							<v-avatar slot="icon" color="deep-purple accent-4" size="40">
-								<v-icon icon="mdi-lock" large color="white">
-									mdi-information-outline
-								</v-icon>
-							</v-avatar>
-
-							<h3>
-								{{ a.title }}
-							</h3>
-							<div class="justify-text">
-								{{ a.text }}
-							</div>
-							<div class="right-buttons">
-								11 de Enero de 2021
-							</div>
-						</v-banner>
-					</div>
-					<div id="textblock" v-if="v0">
-						<v-col v-for="a in avisos" :key="a.name" :cols="12">
-							<v-card>
-								<v-card color="#b6a9a8" flat>
-									<h2>
-										{{ a.title }}
-									</h2></v-card
-								>
+								<h3>
+									{{ a.title }}
+								</h3>
 								<div class="justify-text">
 									{{ a.text }}
 								</div>
 								<div class="right-buttons">
 									11 de Enero de 2021
 								</div>
-							</v-card>
-						</v-col>
+							</v-banner>
+							<div class="right">
+								<v-btn
+									elevation="0"
+									v-show="!v1"
+									@click="v1 = !v1"
+									color="#b6a9a8"
+									dark
+								>
+									Ver más
+								</v-btn>
+							</div>
+							<v-banner
+								v-for="a in avisos2"
+								:key="a.name"
+								two-line
+								v-model="v1"
+								transition="slide-y-transition"
+							>
+								<v-avatar slot="icon" color="deep-purple accent-4" size="40">
+									<v-icon icon="mdi-lock" large color="white">
+										mdi-information-outline
+									</v-icon>
+								</v-avatar>
+
+								<h3>
+									{{ a.title }}
+								</h3>
+								<div class="justify-text">
+									{{ a.text }}
+								</div>
+								<div class="right-buttons">
+									11 de Enero de 2021
+								</div>
+							</v-banner>
+							<div class="right">
+								<v-btn
+									elevation="0"
+									v-show="v1"
+									@click="v1 = !v1"
+									color="#b6a9a8"
+									dark
+								>
+									Ocultar
+								</v-btn>
+							</div>
+						</div>
 					</div>
+
 					<div id="textblock" v-if="!v0">
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry's standard dummy text
 						ever since the 1500s, when an unknown printer took a galley of type
 						and scrambled it to make a type specimen book. It has survived not
 						only five centuries, but also the leap into electronic typesetting,
-						remaining essentially unchanged. It was popularised in the 1960s
-						with the release of Letraset sheets containing Lorem Ipsum passages,
-						and more recently with desktop publishing software like Aldus
-						PageMaker including versions of Lorem Ipsum.
+						remaining essentially unchanged.
 						<br />
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry's standard dummy text
 						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled it to make a type specimen book. It has survived not
-						only five centuries, but also the leap into electronic typesetting,
-						remaining essentially unchanged. It was popularised in the 1960s
-						with the release of Letraset sheets containing Lorem Ipsum passages,
-						and more recently with desktop publishing software like Aldus
-						PageMaker including versions of Lorem Ipsum.
+						and scrambled
 						<br />
 					</div>
 				</v-col>
@@ -130,7 +152,11 @@
 			NabBar,
 		},
 		data: () => ({
+			btn: true,
+			btnAvisos: "Ocultar Avisos",
 			v0: true,
+			v1: false,
+			cargando: false,
 			avisos: [
 				{
 					title: "Aviso 1",
@@ -139,11 +165,33 @@
 					color: "blue lighten-2",
 				},
 			],
+			avisos2: [
+				{
+					title: "Aviso 2",
+					text: "Aqui va aviso 2. ",
+					color: "blue lighten-2",
+				},
+				{
+					title: "Aviso 3",
+					text: "Aqui va aviso 3. ",
+					color: "blue lighten-3",
+				},
+			],
 		}),
 		methods: {
 			login: function() {
 				window.location.href =
 					"https://auth.catteam.tk?origin=https://dashboard.catteam.tk";
+			},
+			btn_Avisos() {
+				this.v0 = !this.v0;
+				this.v1 = false;
+				this.btn = !this.btn;
+				if (this.btn == true) {
+					this.btnAvisos = "Ocultar Avisos";
+				} else {
+					this.btnAvisos = "Mostrar Avisos";
+				}
 			},
 		},
 		async beforeCreate() {
@@ -162,6 +210,9 @@
 			}
 			if (res.status == 200) {
 				this.$router.push("/landing");
+				this.cargando = false;
+			} else {
+				this.cargando = true;
 			}
 		},
 	};

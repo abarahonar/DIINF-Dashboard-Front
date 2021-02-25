@@ -91,6 +91,35 @@
 					max-height="708px"
 				>
 					<v-card-text>
+						<v-banner
+							v-for="a in avisos"
+							:key="a.name"
+							two-line
+							transition="slide-y-transition"
+						>
+							<v-avatar slot="icon" :color="a.color" size="40">
+								<v-icon icon="mdi-lock" large color="white">
+									mdi-information-outline
+								</v-icon>
+							</v-avatar>
+
+							<h3>
+								{{ a.title }}
+							</h3>
+							<div class="justify-text">
+								{{ a.text }}
+							</div>
+							<div class="right-buttons">
+								11 de Enero de 2021<br />
+								<v-btn icon @click="editItem(a)" fab small flat>
+									<v-icon>mdi-pencil</v-icon>
+								</v-btn>
+								<v-btn icon @click="deleteItem(a)" fab flat small>
+									<v-icon>mdi-delete</v-icon>
+								</v-btn>
+							</div>
+						</v-banner>
+
 						<v-col v-for="a in avisos" :key="a.name" :cols="12">
 							<v-card>
 								<v-card :color="a.color" flat
@@ -307,6 +336,14 @@
 		text-align: left;
 		margin-bottom: 10px;
 		color: #ffffff;
+	}
+
+	h3 {
+		padding: 6px;
+		margin-top: 6px;
+		text-align: left;
+		margin-bottom: 6px;
+		color: #4d4949;
 	}
 	.padding {
 		padding: 25px;

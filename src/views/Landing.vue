@@ -12,10 +12,6 @@
 				Página principal
 				<br />
 
-				<v-switch
-					v-model="isAdmin"
-					:label="`Vista admin: ${isAdmin.toString()}`"
-				></v-switch>
 				<br />
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
@@ -133,7 +129,10 @@
 						</v-row>
 					</v-card-text>
 				</v-card>
-				<h1>Esto es una prueba de que la conexion del backend con el sistema de autenticacion estan funcionando correctamente</h1>
+				<h1>
+					Esto es una prueba de que la conexion del backend con el sistema de
+					autenticacion estan funcionando correctamente
+				</h1>
 				<h1 v-for="(nombre_rol, i) in data_temporal.rol" :key="i">
 					{{ i + 1 }}. {{ nombre_rol }}
 				</h1>
@@ -197,7 +196,7 @@
 				//user: {},
 				apps: [],
 				//Esto es temporal
-				data_temporal: {}
+				data_temporal: {},
 			};
 		},
 		computed: {

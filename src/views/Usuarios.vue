@@ -13,6 +13,7 @@
 				Vista de Usuarios<br />
 				Asignar Roles y Activar/Desactivar cuenta.
 				<br /><br /><br /><br /><br /><br />
+
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
@@ -69,6 +70,7 @@
 												v-text="data.item"
 											></v-list-item-content>
 										</template>
+
 										<template v-else>
 											<v-list-item-content>
 												<v-list-item-title
@@ -137,6 +139,12 @@
 								mdi-delete
 							</v-icon>
 						</template>
+						<template v-slot:no-data>
+							<v-skeleton-loader
+								v-bind="attrs"
+								type="image"
+							></v-skeleton-loader>
+						</template>
 					</v-data-table>
 				</v-card>
 			</v-app>
@@ -202,27 +210,6 @@
 				photoURL: "",
 				displayName: "",
 				email: "",
-
-				listApp: [
-					{
-						_id: "123ad",
-						name: " Estudiante ",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123fffsd",
-						name: "Administrador",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123",
-						name: "Profesor",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-				],
 				defaultItem: {
 					name: "",
 					email: "",
@@ -236,20 +223,7 @@
 					roles: [],
 				},
 
-				usuarios: [
-					{
-						name: "Juanito Hernández",
-						email: "Juanito.hernandez@usach.cl",
-						active: true,
-						roles: [],
-					},
-					{
-						name: "Lucia García",
-						email: "Lucia.Garcia@usach.cl",
-						active: true,
-						roles: [],
-					},
-				],
+				usuarios: [],
 			};
 		},
 		computed: {
