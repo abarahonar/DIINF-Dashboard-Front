@@ -6,7 +6,10 @@
 			v-bind:isAdmin="isAdmin"
 			v-bind:isOn="isOn"
 		/>
-		<v-container class="grey lighten-6">
+		<v-container class="grey lighten-6" v-show="!cargando">
+			<v-progress-circular indeterminate></v-progress-circular>
+		</v-container>
+		<v-container class="grey lighten-6" v-show="cargando">
 			<v-app id="generalPage">
 				<h1>Roles</h1>
 
@@ -136,7 +139,7 @@
 				</v-card>
 			</v-app>
 		</v-container>
-		<v-footer padless>
+		<v-footer padless v-show="cargando">
 			<v-card
 				flat
 				color="#EA7600"
@@ -160,7 +163,6 @@
 	export default {
 		name: "Home",
 		components: {
-			//MenuUser,
 			NabBarUser,
 		},
 		data() {
@@ -168,7 +170,7 @@
 				//apps: [],
 				isAdmin: true,
 				isOn: true,
-				flex: "3",
+				cargando: false,
 				overflow: "",
 				dialog: false,
 				editedIndex: -1,
@@ -222,19 +224,7 @@
 					Apps: [],
 				},
 
-				avisos: [
-					/*
-					{
-						name: "Estudiantes",
-
-						Apps: [{ name: "Calendario" }],
-					},
-					{
-						name: "Administración",
-
-						Apps: [{ name: "Finanzas" }, { name: "Datos curriculares" }],
-					},*/
-				],
+				avisos: [],
 			};
 		},
 		computed: {
@@ -259,12 +249,13 @@
 			});
 
 			if (res.status != 200) {
-				this.$router.push("/");
+				this.$router.push("/login");
 				//Si res status != 200 el usuario no esta logeado -> Redireccionar
 			} else {
 				const user = await res.json();
 				this.displayName = user.name;
 				this.photoURL = user.picture;
+				this.cargando = true;
 			}
 		},
 		//mounted() {

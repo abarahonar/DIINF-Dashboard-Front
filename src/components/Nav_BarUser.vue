@@ -51,11 +51,11 @@
 		},
 		data: () => ({
 			items: [
-				{ title: "Aplicaciones", path: "landing", admin: false },
+				{ title: "Aplicaciones", path: "/", admin: false },
 				{ title: "Avisos", path: "avisos", admin: true },
 				{ title: "Roles", path: "rol", admin: true },
 				{ title: "Usuarios", path: "usuarios", admin: true },
-				{ title: "Cerrar sesión", path: "/", admin: false },
+				{ title: "Cerrar sesión", path: "/login", admin: false },
 			],
 		}),
 		methods: {
@@ -71,12 +71,12 @@
 				});
 				if (res.ok) {
 					console.log("Del done");
-					this.$router.push("/");
+					this.$router.push("/login");
 				}
 			},
 			goto(item) {
 				this.item = item;
-				if (this.item == "/") {
+				if (this.item == "/login") {
 					console.log("Del done");
 					this.logOut();
 					this.redirect(item);

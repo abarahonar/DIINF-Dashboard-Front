@@ -6,13 +6,17 @@
 			v-bind:isAdmin="isAdmin"
 			v-bind:isOn="isOn"
 		/>
-		<v-container class="grey lighten-6">
+		<v-container class="grey lighten-6" v-show="!cargando">
+			<v-progress-circular indeterminate></v-progress-circular>
+		</v-container>
+		<v-container class="grey lighten-6" v-show="cargando">
 			<v-app id="generalPage">
 				<h1>Usuarios</h1>
-
 				Vista de Usuarios<br />
 				Asignar Roles y Activar/Desactivar cuenta.
+				<h1>Las funcionalidades de esta vista no están activas</h1>
 				<br /><br /><br /><br /><br /><br />
+
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
@@ -69,6 +73,7 @@
 												v-text="data.item"
 											></v-list-item-content>
 										</template>
+
 										<template v-else>
 											<v-list-item-content>
 												<v-list-item-title
@@ -137,12 +142,18 @@
 								mdi-delete
 							</v-icon>
 						</template>
+						<template v-slot:no-data>
+							<v-skeleton-loader
+								v-bind="attrs"
+								type="image"
+							></v-skeleton-loader>
+						</template>
 					</v-data-table>
 				</v-card>
 			</v-app>
 		</v-container>
 
-		<v-footer padless>
+		<v-footer padless v-show="cargando">
 			<v-card
 				flat
 				color="#EA7600"
@@ -185,7 +196,7 @@
 				],
 				isAdmin: true,
 				isOn: true,
-				flex: "3",
+				cargando: false,
 				overflow: "",
 				dialog: false,
 				editedIndex: -1,
@@ -202,27 +213,6 @@
 				photoURL: "",
 				displayName: "",
 				email: "",
-
-				listApp: [
-					{
-						_id: "123ad",
-						name: " Estudiante ",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123fffsd",
-						name: "Administrador",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123",
-						name: "Profesor",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-				],
 				defaultItem: {
 					name: "",
 					email: "",
@@ -235,21 +225,7 @@
 					active: true,
 					roles: [],
 				},
-
-				usuarios: [
-					{
-						name: "Juanito Hernández",
-						email: "Juanito.hernandez@usach.cl",
-						active: true,
-						roles: [],
-					},
-					{
-						name: "Lucia García",
-						email: "Lucia.Garcia@usach.cl",
-						active: true,
-						roles: [],
-					},
-				],
+				usuarios: [],
 			};
 		},
 		computed: {
@@ -266,7 +242,6 @@
 				val || this.closeDelete();
 			},
 		},
-
 		async mounted() {
 			let res = await fetch("https://back.catteam.tk/verify", {
 				method: "get",
@@ -274,23 +249,15 @@
 			});
 
 			if (res.status != 200) {
-				this.$router.push("/");
+				this.$router.push("/login");
 				//Si res status != 200 el usuario no esta logeado -> Redireccionar
 			} else {
 				const user = await res.json();
 				this.displayName = user.name;
 				this.photoURL = user.picture;
+				this.cargando = true;
 			}
 		},
-		//mounted() {
-		//axios
-		//	.get("http://localhost:80/list-roles")
-		//	.then(response => (this.usuarios = response.data));
-		//axios
-		//	.get("http://localhost:80/list-apps")
-		//	.then(response => (this.listApp = response.data));
-		//},
-
 		methods: {
 			getColor(active) {
 				if (active == true) return "green";
@@ -310,7 +277,6 @@
 					Object.assign(this.usuarios[this.editedIndex], this.editedItem);
 				} else {
 					this.usuarios.push(this.editedItem);
-					//axios.post("https://localhost/create-role", this.editedItem);
 					this.editedItem = Object.assign({}, this.defaultItem);
 				}
 				this.close();

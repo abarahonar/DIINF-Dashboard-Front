@@ -6,7 +6,11 @@
 			v-bind:isAdmin="isAdmin"
 			v-bind:isOn="isOn"
 		/>
-		<v-container class="grey lighten-6">
+		<v-container class="grey lighten-6" v-show="!cargando">
+			<v-progress-circular indeterminate></v-progress-circular>
+		</v-container>
+
+		<v-container class="grey lighten-6" v-show="cargando">
 			<v-app id="generalPage">
 				<h1>Mis aplicaciones</h1>
 				Página principal
@@ -135,7 +139,7 @@
 				</v-card>
 			</v-app>
 		</v-container>
-		<v-footer padless>
+		<v-footer padless v-show="cargando">
 			<v-card
 				flat
 				color="#EA7600"
@@ -165,7 +169,7 @@
 			return {
 				isAdmin: true, //Pedirselo al kevin
 				isOn: true,
-
+				cargando: false,
 				photoURL: "",
 				displayName: "",
 				dialog: false,
@@ -189,8 +193,6 @@
 					url: "",
 					imgdir: "",
 				},
-				flex: "3",
-				//user: {},
 				apps: [],
 			};
 		},
@@ -218,12 +220,13 @@
 			});
 
 			if (res.status != 200) {
-				this.$router.push("/");
+				this.$router.push("/login");
 				//Si res status != 200 el usuario no esta logeado -> Redireccionar
 			} else {
 				const user = await res.json();
 				this.displayName = user.name;
 				this.photoURL = user.picture;
+				this.cargando = true;
 			}
 		},
 		methods: {
@@ -234,7 +237,6 @@
 				});
 				if (res.ok) {
 					console.log("Del done");
-					//Redirect al login
 				}
 			},
 			goto(item) {
@@ -246,13 +248,11 @@
 				this.editedItem = Object.assign({}, item);
 				this.dialog = true;
 			},
-
 			deleteItem(item) {
 				this.editedIndex = this.apps.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialogDelete = true;
 			},
-
 			deleteItemConfirm() {
 				this.apps.splice(this.editedIndex, 1);
 				this.closeDelete();
@@ -273,16 +273,6 @@
 					this.editedIndex = -1;
 				});
 			},
-			/*
-			    getAppvent) {
-      this.markers=event.latlng;
-      this.$http.get('localhost:8080/...,{
-        }).then(response => {
-          this.volunteerList=response.data;
-        });
-    },
-			*/
-
 			save() {
 				if (this.editedIndex > -1) {
 					Object.assign(this.apps[this.editedIndex], this.editedItem);

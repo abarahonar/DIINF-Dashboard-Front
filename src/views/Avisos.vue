@@ -6,7 +6,10 @@
 			v-bind:isAdmin="isAdmin"
 			v-bind:isOn="isOn"
 		/>
-		<v-container class="grey lighten-6">
+		<v-container class="grey lighten-6" v-show="!cargando">
+			<v-progress-circular indeterminate></v-progress-circular>
+		</v-container>
+		<v-container class="grey lighten-6" v-show="cargando">
 			<v-app id="generalPage">
 				<h1>Avisos</h1>
 
@@ -91,29 +94,39 @@
 					max-height="708px"
 				>
 					<v-card-text>
-						<v-col v-for="a in avisos" :key="a.name" :cols="12">
-							<v-card>
-								<v-card :color="a.color" flat
-									><h2>{{ a.title }}</h2></v-card
-								>
-								<div class="justify-text">
-									{{ a.text }}
-								</div>
-								<div class="right-buttons">
-									<v-btn icon @click="editItem(a)" fab small flat>
-										<v-icon>mdi-pencil</v-icon>
-									</v-btn>
-									<v-btn icon @click="deleteItem(a)" fab flat small>
-										<v-icon>mdi-delete</v-icon>
-									</v-btn>
-								</div>
-							</v-card>
-						</v-col>
+						<v-banner
+							v-for="a in avisos"
+							:key="a.name"
+							two-line
+							transition="slide-y-transition"
+						>
+							<v-avatar slot="icon" :color="a.color" size="40">
+								<v-icon icon="mdi-lock" large color="white">
+									mdi-information-outline
+								</v-icon>
+							</v-avatar>
+
+							<h3>
+								{{ a.title }}
+							</h3>
+							<div class="justify-text">
+								{{ a.text }}
+							</div>
+							<div class="right-buttons">
+								11 de Enero de 2021<br />
+								<v-btn icon @click="editItem(a)" fab small flat>
+									<v-icon>mdi-pencil</v-icon>
+								</v-btn>
+								<v-btn icon @click="deleteItem(a)" fab flat small>
+									<v-icon>mdi-delete</v-icon>
+								</v-btn>
+							</div>
+						</v-banner>
 					</v-card-text>
 				</v-card>
 			</v-app>
 		</v-container>
-		<v-footer padless>
+		<v-footer padless v-show="cargando">
 			<v-card
 				flat
 				color="#EA7600"
@@ -141,10 +154,9 @@
 		},
 		data() {
 			return {
-				//apps: [],
+				cargando: false,
 				isOn: true,
 				isAdmin: true,
-				flex: "3",
 				overflow: "",
 				dialog: false,
 				editedIndex: -1,
@@ -179,11 +191,13 @@
 					title: "",
 					text: "",
 					color: "",
+					date: "",
 				},
 				editedItem: {
 					title: "",
 					text: "",
 					color: "",
+					date: "",
 				},
 				avisos: [
 					/*{
@@ -217,20 +231,14 @@
 			});
 
 			if (res.status != 200) {
-				this.$router.push("/");
-				//Si res status != 200 el usuario no esta logeado -> Redireccionar
+				this.$router.push("/login");
 			} else {
 				const user = await res.json();
 				this.displayName = user.name;
 				this.photoURL = user.picture;
+				this.cargando = true;
 			}
 		},
-		/*
-		mounted() {
-			axios
-				.get("http://localhost:80/list-apps")
-				.then(response => (this.apps = response.data));
-		},*/
 
 		methods: {
 			goto(item) {
@@ -238,13 +246,15 @@
 				this.$router.push({ path: item });
 			},
 			save() {
-				if (this.editedIndex > -1) {
-					Object.assign(this.avisos[this.editedIndex], this.editedItem);
-				} else {
-					this.avisos.push(this.editedItem);
-					this.editedItem = Object.assign({}, this.defaultItem);
+				if (this.editedItem.title != "" && this.editedItem.text != "") {
+					if (this.editedIndex > -1) {
+						Object.assign(this.avisos[this.editedIndex], this.editedItem);
+					} else {
+						this.avisos.push(this.editedItem);
+						this.editedItem = Object.assign({}, this.defaultItem);
+					}
+					this.close();
 				}
-				this.close();
 			},
 			editItem(item) {
 				this.editedIndex = this.avisos.indexOf(item);
@@ -307,6 +317,14 @@
 		text-align: left;
 		margin-bottom: 10px;
 		color: #ffffff;
+	}
+
+	h3 {
+		padding: 6px;
+		margin-top: 6px;
+		text-align: left;
+		margin-bottom: 6px;
+		color: #4d4949;
 	}
 	.padding {
 		padding: 25px;
