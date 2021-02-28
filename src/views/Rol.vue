@@ -211,12 +211,10 @@
 				],
 				defaultItem: {
 					name: "",
-					text: "",
 					Apps: [],
 				},
 				editedItem: {
 					name: "",
-					text: "",
 					Apps: [],
 				},
 			};
@@ -282,14 +280,39 @@
 			},
 
 			save() {
-				if (this.editedIndex > -1) {
-					Object.assign(this.roles[this.editedIndex], this.editedItem);
-				} else {
-					this.roles.push(this.editedItem);
-					//axios.post("https://localhost/create-role", this.editedItem);
-					this.editedItem = Object.assign({}, this.defaultItem);
+				if (this.editedItem.name != "") {
+					//Para crear un rol
+					if (this.editedIndex > -1) {
+						Object.assign(this.roles[this.editedIndex], this.editedItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+					data.append( "json", JSON.stringify( this.editedIndex ) );
+					fetch("/crear-rol",
+					{
+						method: "POST",
+						body: data,
+							credentials: "include",
+					})
+					.then(function(res){ return res.json(); })
+					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+
+						//Para editar un rol
+					} else {
+						this.roles.push(this.editedItem);
+						this.editedItem = Object.assign({}, this.defaultItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+					data.append( "json", JSON.stringify( this.editedItem ) );
+					fetch("/editar-rol",
+					{
+						method: "PUSH",
+						body: data,
+							credentials: "include",
+					})
+					.then(function(res){ return res.json(); })
+					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+					}
 				}
-				this.close();
 			},
 			editItem(item) {
 				this.editedIndex = this.roles.indexOf(item);
@@ -306,6 +329,15 @@
 			deleteItemConfirm() {
 				this.roles.splice(this.editedIndex, 1);
 				this.closeDelete();
+				//Borrar arriba y descomentar
+				/*
+						fetch("/borrar-rol" + this.editedIndex.id,
+						{
+							method: "DELETE",
+								credentials: "include",
+							body: data
+						})
+						*/
 			},
 
 			close() {

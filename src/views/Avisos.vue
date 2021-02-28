@@ -71,7 +71,7 @@
 				<v-dialog v-model="dialogDelete" max-width="500px">
 					<v-card>
 						<v-toolbar color="#EA7600" dark flat>
-							<v-toolbar-title>Borrar Aplicación</v-toolbar-title>
+							<v-toolbar-title>Borrar Aviso</v-toolbar-title>
 						</v-toolbar>
 						<br />
 						¿Seguro que quiere eliminar este aviso?
@@ -259,9 +259,32 @@
 				if (this.editedItem.title != "" && this.editedItem.text != "") {
 					if (this.editedIndex > -1) {
 						Object.assign(this.avisos[this.editedIndex], this.editedItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+						data.append( "json", JSON.stringify( this.editedIndex ) );
+						fetch("/crear-aviso",
+						{
+							
+							method: "POST",
+								credentials: "include",
+							body: data
+						})
+						.then(function(res){ return res.json(); })
+						.then(function(data){ alert( JSON.stringify( data ) ) })*/
 					} else {
 						this.avisos.push(this.editedItem);
 						this.editedItem = Object.assign({}, this.defaultItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+						data.append( "json", JSON.stringify( this.editedItem ) );
+						fetch("/editar-aviso",
+						{
+							method: "PUSH",
+								credentials: "include",
+							body: data
+						})
+						.then(function(res){ return res.json(); })
+						.then(function(data){ alert( JSON.stringify( data ) ) })*/
 					}
 					this.close();
 				}
@@ -281,6 +304,15 @@
 			deleteItemConfirm() {
 				this.avisos.splice(this.editedIndex, 1);
 				this.closeDelete();
+				//Borrar arriba y descomentar
+				/*
+						fetch("/borrar-aviso" + this.editedIndex.id,
+						{
+							method: "DELETE",
+								credentials: "include",
+							body: data
+						})
+						*/
 			},
 
 			close() {

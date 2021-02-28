@@ -266,6 +266,15 @@
 			deleteItemConfirm() {
 				this.apps.splice(this.editedIndex, 1);
 				this.closeDelete();
+				//Borrar arriba y descomentar
+				/*
+						fetch("/borrar-app" + this.editedIndex.id,
+						{
+							method: "DELETE",
+								credentials: "include",
+							body: data
+						})
+						*/
 			},
 
 			close() {
@@ -284,18 +293,40 @@
 				});
 			},
 			save() {
-				if (this.editedIndex > -1) {
-					Object.assign(this.apps[this.editedIndex], this.editedItem);
-					//this.$http.put("/create-app/" + this.editedItem._id, {
-					//	_id: this.editedItem.id,
-					//	name: this.editedItem.name,
-					//	url: this.editedItem.url,
-					//	imgdir: this.editedItem.imgUrl,
-					//});
-				} else {
-					this.apps.push(this.editedItem);
+				if (
+					this.editedItem.name != "" &&
+					this.editedItem.url != "" &&
+					this.editedItem.imgdir != ""
+				) {
+					if (this.editedIndex > -1) {
+						Object.assign(this.apps[this.editedIndex], this.editedItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+					data.append( "json", JSON.stringify( this.editedIndex ) );
+					fetch("/crear-app",
+					{
+						method: "POST",
+						body: data,
+							credentials: "include",
+					})
+					.then(function(res){ return res.json(); })
+					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+					} else {
+						this.apps.push(this.editedItem);
+						//Borrar arriba y descomentar
+						/*var data = new FormData();
+					data.append( "json", JSON.stringify( this.editedItem ) );
+					fetch("/editar-app",
+					{
+						method: "PUSH",
+						body: data,
+							credentials: "include",
+					})
+					.then(function(res){ return res.json(); })
+					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+					}
+					this.close();
 				}
-				this.close();
 			},
 		},
 	};
