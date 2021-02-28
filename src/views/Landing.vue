@@ -229,6 +229,16 @@
 				this.cargando = true;
 			}
 		},
+		/*async mounted() {
+			let res = await fetch("/list-apps", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const aplicaciones = await fetch.get("/list-apps");
+				this.apps = aplicaciones;
+			}
+		},*/
 		methods: {
 			async logOut() {
 				let res = await fetch("https://back.catteam.tk/logout", {

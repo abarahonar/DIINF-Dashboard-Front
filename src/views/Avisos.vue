@@ -223,7 +223,17 @@
 				val || this.closeDelete();
 			},
 		},
-		created() {},
+		/*async mounted() {
+			let res = await fetch("/avisos", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const avisos = await fetch.get("/avisos");
+				this.avisos = avisos;
+
+			}
+		},*/
 		async mounted() {
 			let res = await fetch("https://back.catteam.tk/verify", {
 				method: "get",

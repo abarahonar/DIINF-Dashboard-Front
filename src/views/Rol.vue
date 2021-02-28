@@ -113,7 +113,7 @@
 					max-height="708px"
 				>
 					<v-card-text>
-						<v-col v-for="a in avisos" :key="a.name" :cols="12">
+						<v-col v-for="a in roles" :key="a.name" :cols="12">
 							<v-card>
 								<v-card :color="color" flat
 									><h2>{{ a.name }}</h2></v-card
@@ -167,7 +167,6 @@
 		},
 		data() {
 			return {
-				//apps: [],
 				isAdmin: true,
 				isOn: true,
 				cargando: false,
@@ -180,13 +179,12 @@
 					v => !!v || "El rol debe tener un nombre",
 					v => (v && v.length <= 40) || "Debe tener menos de 40 caracteres",
 				],
-
 				photoURL: "",
 				displayName: "",
 				email: "",
-
+				roles: [],
 				listApp: [
-					{
+					/*{
 						_id: "123ad",
 						name: "Calendario",
 						url: "rol",
@@ -209,22 +207,18 @@
 						name: "App Prueba",
 						url: "rol",
 						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
+					},*/
 				],
 				defaultItem: {
 					name: "",
 					text: "",
-
 					Apps: [],
 				},
 				editedItem: {
 					name: "",
 					text: "",
-
 					Apps: [],
 				},
-
-				avisos: [],
 			};
 		},
 		computed: {
@@ -258,14 +252,24 @@
 				this.cargando = true;
 			}
 		},
-		//mounted() {
-		//axios
-		//	.get("http://localhost:80/list-roles")
-		//	.then(response => (this.avisos = response.data));
-		//axios
-		//	.get("http://localhost:80/list-apps")
-		//	.then(response => (this.listApp = response.data));
-		//},
+		/*async mounted() {
+			let res = await fetch("/list-roles", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const rol = await fetch.get("/list-roles");
+				this.roles = rol;
+			}
+			let res = await fetch("/list-apps", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const aplicaciones = await fetch.get("/list-apps");
+				this.listApp = aplicaciones;
+			}
+		},*/
 
 		methods: {
 			remove(item) {
@@ -279,28 +283,28 @@
 
 			save() {
 				if (this.editedIndex > -1) {
-					Object.assign(this.avisos[this.editedIndex], this.editedItem);
+					Object.assign(this.roles[this.editedIndex], this.editedItem);
 				} else {
-					this.avisos.push(this.editedItem);
+					this.roles.push(this.editedItem);
 					//axios.post("https://localhost/create-role", this.editedItem);
 					this.editedItem = Object.assign({}, this.defaultItem);
 				}
 				this.close();
 			},
 			editItem(item) {
-				this.editedIndex = this.avisos.indexOf(item);
+				this.editedIndex = this.roles.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialog = true;
 			},
 
 			deleteItem(item) {
-				this.editedIndex = this.avisos.indexOf(item);
+				this.editedIndex = this.roles.indexOf(item);
 				this.editedItem = Object.assign({}, item);
 				this.dialogDelete = true;
 			},
 
 			deleteItemConfirm() {
-				this.avisos.splice(this.editedIndex, 1);
+				this.roles.splice(this.editedIndex, 1);
 				this.closeDelete();
 			},
 

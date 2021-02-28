@@ -25,9 +25,6 @@
 				</v-col>
 				<v-col cols="8">
 					<div id="textblock">
-						{{ primer_aviso }}<br />
-						{{ todos_avisos }}
-
 						<v-card color="#b6a9a8">
 							<div class="right">
 								<v-btn elevation="0" @click="btn_Avisos" color="#b6a9a8" dark>
@@ -37,7 +34,7 @@
 						</v-card>
 						<div v-show="v0">
 							<v-banner
-								v-for="a in avisos"
+								v-for="a in primer_aviso"
 								:key="a.name"
 								two-line
 								v-model="v0"
@@ -71,7 +68,7 @@
 								</v-btn>
 							</div>
 							<v-banner
-								v-for="a in avisos2"
+								v-for="a in avisos"
 								:key="a.name"
 								two-line
 								v-model="v1"
@@ -158,8 +155,8 @@
 			v0: true,
 			v1: false,
 			cargando: false,
-			todos_avisos: [
-				{
+			avisos: [
+				/*{
 					title: "Aviso 1",
 					text: "Aqui va aviso 2. ",
 					color: "blue lighten-2",
@@ -178,29 +175,9 @@
 					title: "Aviso 4",
 					text: "Aqui va aviso 3. ",
 					color: "blue lighten-3",
-				},
+				},*/
 			],
 			primer_aviso: [],
-			avisos: [
-				{
-					title: "Aviso 1",
-					text:
-						"Aqui va aviso 1. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
-					color: "blue lighten-2",
-				},
-			],
-			avisos2: [
-				{
-					title: "Aviso 2",
-					text: "Aqui va aviso 2. ",
-					color: "blue lighten-2",
-				},
-				{
-					title: "Aviso 3",
-					text: "Aqui va aviso 3. ",
-					color: "blue lighten-3",
-				},
-			],
 		}),
 		methods: {
 			login: function() {
@@ -218,6 +195,19 @@
 				}
 			},
 		},
+		/*async mounted() {
+			let res = await fetch("/avisos", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const avisos = await fetch.get("/avisos");
+				this.avisos = avisos;
+				//Funcion para separar el ultimo aviso de la lista de los demás avisos
+				//Si funciona incorrectamente, cambiar pop por shift()
+				this.primer_aviso.push(this.avisos.pop());
+			}
+		},*/
 		async beforeCreate() {
 			const queryString = window.location.search;
 			const urlParams = new URLSearchParams(queryString);
