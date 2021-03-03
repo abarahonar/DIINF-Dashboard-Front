@@ -15,7 +15,7 @@
 				<h1>Mis aplicaciones</h1>
 				Página principal
 				<br />
-
+				Rol: {{ rol }}
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
@@ -120,6 +120,7 @@
 										>
 											<v-icon>mdi-pencil</v-icon>
 										</v-btn>
+
 										<v-btn
 											v-show="isAdmin === true"
 											icon
@@ -160,7 +161,11 @@
 
 <script>
 	import NabBarUser from "@/components/Nav_BarUser.vue";
-
+	const axios = require("axios");
+	axios.defaults.headers.post["Content-Type"] = "application/json";
+	axios.defaults.withCredentials = true;
+	axios.defaults.xsrfCookieName = "csrftoken";
+	axios.defaults.xsrfHeaderName = "X-CSRFToken";
 	export default {
 		name: "Home",
 		components: {
@@ -168,16 +173,17 @@
 		},
 		data() {
 			return {
-				rol: "",
-				isAdmin: true,
+				isAdmin: false,
 				isOn: true,
 				cargando: false,
 				photoURL: "",
+
 				displayName: "",
 				dialog: false,
 				editedIndex: -1,
 				valid: true,
 
+				rol: "",
 				nameRules: [
 					v => !!v || "Debe escribir un numbre ",
 					v => (v && v.length <= 20) || "Debe tener menos de 20 caracteres",
@@ -238,10 +244,12 @@
 			if (res.status == 200) {
 				const aplicaciones = await res.json();
 				this.apps = JSON.parse(aplicaciones.res.apps);
-				/*this.rol = aplicaciones.res.name;
-				if (this.rol == "Administrador") {
+				this.rol = aplicaciones.res.name;
+				if (this.rol == "Administrators") {
 					this.isAdmin = true;
-				}*/
+				} else {
+					this.isAdmin = false;
+				}
 			}
 		},
 		methods: {
@@ -269,16 +277,18 @@
 				this.dialogDelete = true;
 			},
 			deleteItemConfirm() {
-				let data = JSON.stringify(this.editedItem);
-				fetch("https://back.dashboard.catteam.tk/delete-app", {
-					method: "delete",
-					headers: {
-						"Content-Type": "application/json",
-						//"Content-Type": "multipart/form-data",
-					},
-					body: data,
-					credentials: "include",
-				});
+				let item = this.editedItem;
+				let formdata = new FormData();
+				formdata.append("id", item._id);
+				formdata.append("app_name", item.name);
+				formdata.append("app_url", item.url);
+				formdata.append("img", item.img);
+				console.log(formdata);
+				axios
+					.post("https://back.dashboard.catteam.tk/delete-app", formdata)
+					//.then(response => response.text())
+					.then(result => console.log(result))
+					.catch(error => console.log("error", error));
 				this.closeDelete();
 			},
 
@@ -300,45 +310,27 @@
 			save(item) {
 				if (item.name != "" && item.url != "") {
 					if (this.editedIndex > -1) {
-						//Object.assign(this.apps[this.editedIndex], this.editedItem);
-						//Borrar arriba y descomentar
-						//let data = new FormData();
-						let data = JSON.stringify(this.editedItem);
-						//data.append("name", item.name);
-						//data.append("url", item.url);
-						//data.append("img", item.img);
-						console.log(data);
-						fetch("https://back.dashboard.catteam.tk/update-app", {
-							method: "put",
-							headers: {
-								"Content-Type": "application/json",
-								//"Content-Type": "multipart/form-data",
-							},
-							//body: data,
-							body: data,
-							credentials: "include",
-						});
+						let formdata = new FormData();
+						formdata.append("id", item._id);
+						formdata.append("app_name", item.name);
+						formdata.append("app_url", item.url);
+						formdata.append("img", item.img);
+						console.log(formdata);
+						axios
+							.post("https://back.dashboard.catteam.tk/update-app", formdata)
+							//.then(response => response.text())
+							.then(result => console.log(result))
+							.catch(error => console.log("error", error));
 					} else {
-						//this.apps.push(this.editedItem);
-						//Borrar arriba y descomentar
-
-						//let data = new FormData();
-						let data = JSON.stringify(this.editedItem);
-						//data.append("name", item.name);
-						//data.append("url", item.url);
-						//data.append("img", item.img);
-						//console.log(data);
-						fetch("https://back.dashboard.catteam.tk/create-app", {
-							method: "post",
-
-							headers: {
-								"Content-Type": "application/json",
-
-								//"Content-Type": "multipart/form-data",
-							},
-							credentials: "include",
-							body: data,
-						});
+						let formdata = new FormData();
+						formdata.append("app_name", item.name);
+						formdata.append("app_url", item.url);
+						formdata.append("img", item.img);
+						console.log(formdata);
+						axios
+							.post("https://back.dashboard.catteam.tk/create-app", formdata)
+							.then(result => console.log(result))
+							.catch(error => console.log("error", error));
 					}
 				}
 				this.close();
