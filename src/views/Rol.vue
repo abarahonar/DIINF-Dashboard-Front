@@ -39,7 +39,7 @@
 								></v-text-field>
 
 								<v-autocomplete
-									v-model="editedItem.Apps"
+									v-model="editedItem.apps"
 									:items="listApp"
 									filled
 									chips
@@ -97,7 +97,7 @@
 						<v-card-actions>
 							<v-spacer></v-spacer>
 							<v-btn color="#002F6C" text @click="closeDelete">Cancelar</v-btn>
-							<v-btn color="#002F6C" text @click="deleteItemConfirm"
+							<v-btn color="#002F6C" text @click="deleteItemConfirm()"
 								>Borrar Rol</v-btn
 							>
 							<v-spacer></v-spacer>
@@ -121,14 +121,12 @@
 								<div class="justify-text">
 									Aplicaciones:
 									<br />
-									<v-chip v-for="app in a.Apps" :key="app.id">
+
+									<v-chip v-for="app in listApp" :key="app.id">
 										<strong>{{ app.name }}</strong>
 									</v-chip>
 								</div>
 								<div class="right-buttons">
-									<v-btn icon @click="editItem(a)" fab small flat>
-										<v-icon>mdi-pencil</v-icon>
-									</v-btn>
 									<v-btn icon @click="deleteItem(a)" fab flat small>
 										<v-icon>mdi-delete</v-icon>
 									</v-btn>
@@ -183,39 +181,15 @@
 				displayName: "",
 				email: "",
 				roles: [],
-				listApp: [
-					/*{
-						_id: "123ad",
-						name: "Calendario",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123fffsd",
-						name: "Datos curriculares",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123",
-						name: "Finanzas",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},
-					{
-						_id: "123",
-						name: "App Prueba",
-						url: "rol",
-						imgdir: "http://vaibs.com.mx/wp-content/uploads/2020/05/mail.png",
-					},*/
-				],
+				appuser: [],
+				listApp: [],
 				defaultItem: {
 					name: "",
-					Apps: [],
+					apps: [],
 				},
 				editedItem: {
 					name: "",
-					Apps: [],
+					apps: [],
 				},
 			};
 		},
@@ -233,13 +207,33 @@
 				val || this.closeDelete();
 			},
 		},
-
 		async mounted() {
+			let res = await fetch("https://back.dashboard.catteam.tk/list-apps", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res.status == 200) {
+				const aplicaciones = await res.json();
+				this.listApp = aplicaciones;
+			}
+
+			let res2 = await fetch("https://back.dashboard.catteam.tk/list-roles", {
+				method: "get",
+				credentials: "include",
+			});
+			if (res2.status == 200) {
+				const rol = await res2.json();
+				this.roles = rol;
+
+				//Falta poder transformar Apps a Json y asi obtener los datos
+			}
+		},
+
+		async beforeCreate() {
 			let res = await fetch("https://back.catteam.tk/verify", {
 				method: "get",
 				credentials: "include",
 			});
-
 			if (res.status != 200) {
 				this.$router.push("/login");
 				//Si res status != 200 el usuario no esta logeado -> Redireccionar
@@ -250,29 +244,14 @@
 				this.cargando = true;
 			}
 		},
-		/*async mounted() {
-			let res = await fetch("/list-roles", {
-				method: "get",
-				credentials: "include",
-			});
-			if (res.status == 200) {
-				const rol = await fetch.get("/list-roles");
-				this.roles = rol;
-			}
-			let res = await fetch("/list-apps", {
-				method: "get",
-				credentials: "include",
-			});
-			if (res.status == 200) {
-				const aplicaciones = await fetch.get("/list-apps");
-				this.listApp = aplicaciones;
-			}
-		},*/
 
 		methods: {
+			parsejson() {
+				this.appuser = this.roles.name;
+			},
 			remove(item) {
-				const index = this.editedItem.Apps.indexOf(item);
-				if (index >= 0) this.editedItem.Apps.splice(index, 1);
+				const index = this.editedItem.apps.indexOf(item);
+				if (index >= 0) this.editedItem.apps.splice(index, 1);
 			},
 			goto(item) {
 				this.item = item;
@@ -281,37 +260,22 @@
 
 			save() {
 				if (this.editedItem.name != "") {
-					//Para crear un rol
-					if (this.editedIndex > -1) {
-						Object.assign(this.roles[this.editedIndex], this.editedItem);
-						//Borrar arriba y descomentar
-						/*var data = new FormData();
-					data.append( "json", JSON.stringify( this.editedIndex ) );
-					fetch("/crear-rol",
-					{
-						method: "POST",
-						body: data,
-							credentials: "include",
-					})
-					.then(function(res){ return res.json(); })
-					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+					//Para editar un rol
 
-						//Para editar un rol
-					} else {
-						this.roles.push(this.editedItem);
-						this.editedItem = Object.assign({}, this.defaultItem);
-						//Borrar arriba y descomentar
-						/*var data = new FormData();
-					data.append( "json", JSON.stringify( this.editedItem ) );
-					fetch("/editar-rol",
-					{
-						method: "PUSH",
-						body: data,
+					if (this.editedIndex < -1) {
+						//Crear
+						let data = JSON.stringify(this.editedItem);
+						console.log(data);
+						fetch("https://back.dashboard.catteam.tk/create-role", {
+							method: "post",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: data,
 							credentials: "include",
-					})
-					.then(function(res){ return res.json(); })
-					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+						});
 					}
+					this.close();
 				}
 			},
 			editItem(item) {
@@ -327,17 +291,17 @@
 			},
 
 			deleteItemConfirm() {
-				this.roles.splice(this.editedIndex, 1);
+				let data = JSON.stringify(this.editedItem);
+				fetch("https://back.dashboard.catteam.tk/delete-role", {
+					method: "delete",
+					headers: {
+						"Content-Type": "application/json",
+						//"Content-Type": "multipart/form-data",
+					},
+					body: data,
+					credentials: "include",
+				});
 				this.closeDelete();
-				//Borrar arriba y descomentar
-				/*
-						fetch("/borrar-rol" + this.editedIndex.id,
-						{
-							method: "DELETE",
-								credentials: "include",
-							body: data
-						})
-						*/
 			},
 
 			close() {

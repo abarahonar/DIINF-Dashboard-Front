@@ -16,11 +16,6 @@
 				Página principal
 				<br />
 
-				<v-switch
-					v-model="isAdmin"
-					:label="`Vista admin: ${isAdmin.toString()}`"
-				></v-switch>
-				<br />
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
@@ -57,7 +52,7 @@
 								></v-text-field>
 
 								<v-text-field
-									v-model="editedItem.imgdir"
+									v-model="editedItem.img"
 									:rules="urlRules"
 									label="URL Imagen"
 									required
@@ -67,7 +62,12 @@
 								<v-btn color="#002F6C" text @click="close">
 									Cancelar
 								</v-btn>
-								<v-btn color="#002F6C" :disabled="!valid" text @click="save">
+								<v-btn
+									color="#002F6C"
+									:disabled="!valid"
+									text
+									@click="save(editedItem)"
+								>
 									Guardar Aplicación
 								</v-btn>
 							</div>
@@ -105,9 +105,10 @@
 								<v-card outlined>
 									<br />
 									<a :href="a.url">
-										<img alt="imgapp" :src="a.imgdir" height="90px" /><br />
+										<img alt="imgapp" :src="a.img" height="90px" /><br />
+										{{ a.name }}
 									</a>
-									{{ a.name }}<br />
+									<br />
 									<div class="right-buttons">
 										<v-btn
 											v-show="isAdmin === true"
@@ -167,7 +168,8 @@
 		},
 		data() {
 			return {
-				isAdmin: true, //Pedirselo al kevin
+				rol: "",
+				isAdmin: true,
 				isOn: true,
 				cargando: false,
 				photoURL: "",
@@ -175,6 +177,7 @@
 				dialog: false,
 				editedIndex: -1,
 				valid: true,
+
 				nameRules: [
 					v => !!v || "Debe escribir un numbre ",
 					v => (v && v.length <= 20) || "Debe tener menos de 20 caracteres",
@@ -182,16 +185,14 @@
 				dirRules: [v => !!v || "Debe escribir la dirección de la Aplicación "],
 				urlRules: [v => !!v || "Debe escribir la URL de la imagen "],
 				editedItem: {
-					_id: "",
 					name: "",
 					url: "",
-					imgdir: "",
+					img: "",
 				},
 				defaultItem: {
-					_id: "",
 					name: "",
 					url: "",
-					imgdir: "",
+					img: "",
 				},
 				apps: [],
 			};
@@ -229,16 +230,20 @@
 				this.cargando = true;
 			}
 		},
-		/*async mounted() {
-			let res = await fetch("/list-apps", {
+		async mounted() {
+			let res = await fetch("https://back.dashboard.catteam.tk/user-apps", {
 				method: "get",
 				credentials: "include",
 			});
 			if (res.status == 200) {
-				const aplicaciones = await fetch.get("/list-apps");
-				this.apps = aplicaciones;
+				const aplicaciones = await res.json();
+				this.apps = JSON.parse(aplicaciones.res.apps);
+				/*this.rol = aplicaciones.res.name;
+				if (this.rol == "Administrador") {
+					this.isAdmin = true;
+				}*/
 			}
-		},*/
+		},
 		methods: {
 			async logOut() {
 				let res = await fetch("https://back.catteam.tk/logout", {
@@ -264,17 +269,17 @@
 				this.dialogDelete = true;
 			},
 			deleteItemConfirm() {
-				this.apps.splice(this.editedIndex, 1);
+				let data = JSON.stringify(this.editedItem);
+				fetch("https://back.dashboard.catteam.tk/delete-app", {
+					method: "delete",
+					headers: {
+						"Content-Type": "application/json",
+						//"Content-Type": "multipart/form-data",
+					},
+					body: data,
+					credentials: "include",
+				});
 				this.closeDelete();
-				//Borrar arriba y descomentar
-				/*
-						fetch("/borrar-app" + this.editedIndex.id,
-						{
-							method: "DELETE",
-								credentials: "include",
-							body: data
-						})
-						*/
 			},
 
 			close() {
@@ -292,41 +297,51 @@
 					this.editedIndex = -1;
 				});
 			},
-			save() {
-				if (
-					this.editedItem.name != "" &&
-					this.editedItem.url != "" &&
-					this.editedItem.imgdir != ""
-				) {
+			save(item) {
+				if (item.name != "" && item.url != "") {
 					if (this.editedIndex > -1) {
-						Object.assign(this.apps[this.editedIndex], this.editedItem);
+						//Object.assign(this.apps[this.editedIndex], this.editedItem);
 						//Borrar arriba y descomentar
-						/*var data = new FormData();
-					data.append( "json", JSON.stringify( this.editedIndex ) );
-					fetch("/crear-app",
-					{
-						method: "POST",
-						body: data,
+						//let data = new FormData();
+						let data = JSON.stringify(this.editedItem);
+						//data.append("name", item.name);
+						//data.append("url", item.url);
+						//data.append("img", item.img);
+						console.log(data);
+						fetch("https://back.dashboard.catteam.tk/update-app", {
+							method: "put",
+							headers: {
+								"Content-Type": "application/json",
+								//"Content-Type": "multipart/form-data",
+							},
+							//body: data,
+							body: data,
 							credentials: "include",
-					})
-					.then(function(res){ return res.json(); })
-					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+						});
 					} else {
-						this.apps.push(this.editedItem);
+						//this.apps.push(this.editedItem);
 						//Borrar arriba y descomentar
-						/*var data = new FormData();
-					data.append( "json", JSON.stringify( this.editedItem ) );
-					fetch("/editar-app",
-					{
-						method: "PUSH",
-						body: data,
+
+						//let data = new FormData();
+						let data = JSON.stringify(this.editedItem);
+						//data.append("name", item.name);
+						//data.append("url", item.url);
+						//data.append("img", item.img);
+						//console.log(data);
+						fetch("https://back.dashboard.catteam.tk/create-app", {
+							method: "post",
+
+							headers: {
+								"Content-Type": "application/json",
+
+								//"Content-Type": "multipart/form-data",
+							},
 							credentials: "include",
-					})
-					.then(function(res){ return res.json(); })
-					.then(function(data){ alert( JSON.stringify( data ) ) })*/
+							body: data,
+						});
 					}
-					this.close();
 				}
+				this.close();
 			},
 		},
 	};

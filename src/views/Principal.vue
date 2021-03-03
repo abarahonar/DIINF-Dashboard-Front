@@ -195,26 +195,25 @@
 				}
 			},
 		},
-		/*async mounted() {
-			let res = await fetch("/avisos", {
+		async mounted() {
+			let res = await fetch("https://back.dashboard.catteam.tk/get-message", {
 				method: "get",
-				credentials: "include",
 			});
 			if (res.status == 200) {
-				const avisos = await fetch.get("/avisos");
+				const avisos = await fetch.get(
+					"https://back.dashboard.catteam.tk/get-message"
+				);
 				this.avisos = avisos;
 				//Funcion para separar el ultimo aviso de la lista de los demás avisos
 				//Si funciona incorrectamente, cambiar pop por shift()
 				this.primer_aviso.push(this.avisos.pop());
 			}
-		},*/
+		},
 		async beforeCreate() {
 			const queryString = window.location.search;
 			const urlParams = new URLSearchParams(queryString);
 			const logIn = urlParams.get("loggedIn");
 			console.log(logIn);
-			//Redireccionar a la vista de aplicaciones si es true
-			//En caso de que sea null puede que el usuario ya este registrado y sea necesario...
 			let res = await fetch("https://back.catteam.tk/verify", {
 				method: "get",
 				credentials: "include",

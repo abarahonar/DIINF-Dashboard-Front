@@ -199,14 +199,7 @@
 					color: "",
 					date: "",
 				},
-				avisos: [
-					/*{
-						title: "Aviso 1",
-						text:
-							"Aqui va aviso 1. Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy Lorem Ipsum is simply dummy ",
-						color: "blue lighten-2",
-					},*/
-				],
+				avisos: [],
 			};
 		},
 		computed: {
@@ -223,18 +216,17 @@
 				val || this.closeDelete();
 			},
 		},
-		/*async mounted() {
-			let res = await fetch("/avisos", {
+		async mounted() {
+			let res = await fetch("https://back.dashboard.catteam.tk/get-message", {
 				method: "get",
 				credentials: "include",
 			});
 			if (res.status == 200) {
-				const avisos = await fetch.get("/avisos");
-				this.avisos = avisos;
-
+				const aplicaciones = await res.json();
+				this.avisos = JSON.parse(aplicaciones.res.apps);
 			}
-		},*/
-		async mounted() {
+		},
+		async beforeCreate() {
 			let res = await fetch("https://back.catteam.tk/verify", {
 				method: "get",
 				credentials: "include",
@@ -258,36 +250,48 @@
 			save() {
 				if (this.editedItem.title != "" && this.editedItem.text != "") {
 					if (this.editedIndex > -1) {
-						Object.assign(this.avisos[this.editedIndex], this.editedItem);
+						//Object.assign(this.apps[this.editedIndex], this.editedItem);
 						//Borrar arriba y descomentar
-						/*var data = new FormData();
-						data.append( "json", JSON.stringify( this.editedIndex ) );
-						fetch("/crear-aviso",
-						{
-							
-							method: "POST",
-								credentials: "include",
-							body: data
-						})
-						.then(function(res){ return res.json(); })
-						.then(function(data){ alert( JSON.stringify( data ) ) })*/
+						//let data = new FormData();
+						let data = JSON.stringify(this.editedItem);
+						//data.append("name", item.name);
+						//data.append("url", item.url);
+						//data.append("img", item.img);
+						console.log(data);
+						fetch("https://back.dashboard.catteam.tk/edit-message ", {
+							method: "put",
+							headers: {
+								"Content-Type": "application/json",
+								//"Content-Type": "multipart/form-data",
+							},
+							//body: data,
+							body: data,
+							credentials: "include",
+						});
 					} else {
-						this.avisos.push(this.editedItem);
-						this.editedItem = Object.assign({}, this.defaultItem);
+						//this.apps.push(this.editedItem);
 						//Borrar arriba y descomentar
-						/*var data = new FormData();
-						data.append( "json", JSON.stringify( this.editedItem ) );
-						fetch("/editar-aviso",
-						{
-							method: "PUSH",
-								credentials: "include",
-							body: data
-						})
-						.then(function(res){ return res.json(); })
-						.then(function(data){ alert( JSON.stringify( data ) ) })*/
+
+						//let data = new FormData();
+						let data = JSON.stringify(this.editedItem);
+						//data.append("name", item.name);
+						//data.append("url", item.url);
+						//data.append("img", item.img);
+						//console.log(data);
+						fetch("https://back.dashboard.catteam.tk/create-message", {
+							method: "post",
+
+							headers: {
+								"Content-Type": "application/json",
+
+								//"Content-Type": "multipart/form-data",
+							},
+							credentials: "include",
+							body: data,
+						});
 					}
-					this.close();
 				}
+				this.close();
 			},
 			editItem(item) {
 				this.editedIndex = this.avisos.indexOf(item);
@@ -302,17 +306,17 @@
 			},
 
 			deleteItemConfirm() {
-				this.avisos.splice(this.editedIndex, 1);
+				let data = JSON.stringify(this.editedItem);
+				fetch("https://back.dashboard.catteam.tk/delete-message", {
+					method: "delete",
+					headers: {
+						"Content-Type": "application/json",
+						//"Content-Type": "multipart/form-data",
+					},
+					body: data,
+					credentials: "include",
+				});
 				this.closeDelete();
-				//Borrar arriba y descomentar
-				/*
-						fetch("/borrar-aviso" + this.editedIndex.id,
-						{
-							method: "DELETE",
-								credentials: "include",
-							body: data
-						})
-						*/
 			},
 
 			close() {
