@@ -155,28 +155,7 @@
 			v0: true,
 			v1: false,
 			cargando: false,
-			avisos: [
-				/*{
-					title: "Aviso 1",
-					text: "Aqui va aviso 2. ",
-					color: "blue lighten-2",
-				},
-				{
-					title: "Aviso 2",
-					text: "Aqui va aviso 3. ",
-					color: "blue lighten-3",
-				},
-				{
-					title: "Aviso 3",
-					text: "Aqui va aviso 2. ",
-					color: "blue lighten-2",
-				},
-				{
-					title: "Aviso 4",
-					text: "Aqui va aviso 3. ",
-					color: "blue lighten-3",
-				},*/
-			],
+			avisos: [],
 			primer_aviso: [],
 		}),
 		methods: {

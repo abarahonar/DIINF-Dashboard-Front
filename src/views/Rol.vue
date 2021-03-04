@@ -75,7 +75,7 @@
 										</template>
 									</template>
 								</v-autocomplete>
-								{{ defaultApps }}
+
 								<v-btn color="#002F6C" text @click="close">
 									Cancelar
 								</v-btn>
@@ -90,7 +90,7 @@
 				<v-dialog v-model="dialogDelete" max-width="500px">
 					<v-card>
 						<v-toolbar color="#EA7600" dark flat>
-							<v-toolbar-title>Borrar Aplicación</v-toolbar-title>
+							<v-toolbar-title>Borrar Rol</v-toolbar-title>
 						</v-toolbar>
 						<br />
 						¿Seguro que quiere eliminar este Rol?
@@ -121,12 +121,15 @@
 								<div class="justify-text">
 									Aplicaciones:
 									<br />
-
-									<v-chip v-for="app in listApp" :key="app.id">
+									<v-chip v-for="app in JSON.parse(a.apps)" :key="app.id">
 										<strong>{{ app.name }}</strong>
 									</v-chip>
 								</div>
 								<div class="right-buttons">
+									<v-btn icon @click="editItem(a)" fab small flat>
+										<v-icon>mdi-pencil</v-icon>
+									</v-btn>
+
 									<v-btn icon @click="deleteItem(a)" fab flat small>
 										<v-icon>mdi-delete</v-icon>
 									</v-btn>
@@ -157,7 +160,11 @@
 
 <script>
 	import NabBarUser from "@/components/Nav_BarUser.vue";
-
+	const axios = require("axios");
+	axios.defaults.headers.post["Content-Type"] = "application/json";
+	axios.defaults.withCredentials = true;
+	axios.defaults.xsrfCookieName = "csrftoken";
+	axios.defaults.xsrfHeaderName = "X-CSRFToken";
 	export default {
 		name: "Home",
 		components: {
@@ -262,19 +269,16 @@
 				if (this.editedItem.name != "") {
 					//Para editar un rol
 
-					if (this.editedIndex < -1) {
-						//Crear
-						let data = JSON.stringify(this.editedItem);
-						console.log(data);
-						fetch("https://back.dashboard.catteam.tk/create-role", {
-							method: "post",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: data,
-							credentials: "include",
-						});
-					}
+					let formdata = new FormData();
+					formdata.append("role_name", this.editedItem.name);
+					let apps = JSON.stringify(this.editedItem.apps);
+					formdata.append("role_apps", apps);
+					console.log(formdata);
+					axios
+						.post("https://back.dashboard.catteam.tk/create-role", formdata)
+						.then(result => console.log(result))
+						.catch(error => console.log("error", error));
+
 					this.close();
 				}
 			},

@@ -6,16 +6,36 @@
 			v-bind:isAdmin="isAdmin"
 			v-bind:isOn="isOn"
 		/>
+
 		<v-container class="grey lighten-6" v-show="!cargando">
-			<v-progress-circular indeterminate></v-progress-circular>
+			<v-progress-circular
+				indeterminate
+				v-show="!dialogError"
+			></v-progress-circular>
+
+			<v-card v-show="dialogError">
+				<v-toolbar color="#EA7600" dark flat>
+					<v-toolbar-title
+						>Ha ocurrido un error al intentar iniciar sesión
+					</v-toolbar-title>
+				</v-toolbar>
+				<div class="padding">
+					Error tipo {{ logStattus }}, contactarse con un administrador para
+					conocer más detalle.
+				</div>
+				<v-btn color="#002F6C" text @click="closeError">
+					Volver al Login
+				</v-btn>
+			</v-card>
 		</v-container>
 
 		<v-container class="grey lighten-6" v-show="cargando">
 			<v-app id="generalPage">
 				<h1>Mis aplicaciones</h1>
 				Página principal
+
 				<br />
-				Rol: {{ rol }}
+				Rol: <span v-for="elem in rol" :key="elem">{{ elem }} </span><br />
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
@@ -173,17 +193,20 @@
 		},
 		data() {
 			return {
+				res: [],
+				logStattus: 0,
 				isAdmin: false,
 				isOn: true,
 				cargando: false,
-				photoURL: "",
 
+				photoURL: "",
 				displayName: "",
 				dialog: false,
+				dialogDelete: false,
+				dialogError: false,
 				editedIndex: -1,
 				valid: true,
-
-				rol: "",
+				rol: [],
 				nameRules: [
 					v => !!v || "Debe escribir un numbre ",
 					v => (v && v.length <= 20) || "Debe tener menos de 20 caracteres",
@@ -212,6 +235,9 @@
 		},
 
 		watch: {
+			dialogError(val) {
+				val || this.closeError();
+			},
 			dialog(val) {
 				val || this.close();
 			},
@@ -227,7 +253,19 @@
 			});
 
 			if (res.status != 200) {
-				this.$router.push("/login");
+				console.log(res.status);
+				this.dialogError = true;
+				if (res.status == 500) {
+					console.log("error 500");
+					this.logStattus = 500;
+				} else if (res.status === 400) {
+					console.log("error 400");
+					this.logStattus = 400;
+				} else {
+					this.logStattus = res.status;
+				}
+
+				//this.$router.push("/login");
 				//Si res status != 200 el usuario no esta logeado -> Redireccionar
 			} else {
 				const user = await res.json();
@@ -243,10 +281,28 @@
 			});
 			if (res.status == 200) {
 				const aplicaciones = await res.json();
-				this.apps = JSON.parse(aplicaciones.res.apps);
-				this.rol = aplicaciones.res.name;
+				this.res = aplicaciones.res;
+				this.rol = [];
+				this.apps = [];
+				console.log(this.res);
+				for (const elem of this.res) {
+					this.rol.push(elem.name);
+					this.apps = this.apps.concat(JSON.parse(elem.apps));
+					console.log(elem.apps);
+					console.log(this.apps);
+				}
+				//this.rol = this.res.name;
+				//this.apps = JSON.parse(this.res.apps);
 				if (this.rol == "Administrators") {
 					this.isAdmin = true;
+					let res = await fetch("https://back.dashboard.catteam.tk/list-apps", {
+						method: "get",
+						credentials: "include",
+					});
+					if (res.status == 200) {
+						const aplicaciones = await res.json();
+						this.apps = aplicaciones;
+					}
 				} else {
 					this.isAdmin = false;
 				}
@@ -306,6 +362,10 @@
 					this.editedItem = Object.assign({}, this.defaultItem);
 					this.editedIndex = -1;
 				});
+			},
+			closeError() {
+				this.dialogError = false;
+				this.$router.push("/login");
 			},
 			save(item) {
 				if (item.name != "" && item.url != "") {
