@@ -293,18 +293,23 @@
 				}
 				//this.rol = this.res.name;
 				//this.apps = JSON.parse(this.res.apps);
-				if (this.rol == "Administrators") {
-					this.isAdmin = true;
-					let res = await fetch("https://back.dashboard.catteam.tk/list-apps", {
-						method: "get",
-						credentials: "include",
-					});
-					if (res.status == 200) {
-						const aplicaciones = await res.json();
-						this.apps = aplicaciones;
+				for (const actualrol of this.rol) {
+					if (actualrol == "Administrators") {
+						this.isAdmin = true;
+						let res = await fetch(
+							"https://back.dashboard.catteam.tk/list-apps",
+							{
+								method: "get",
+								credentials: "include",
+							}
+						);
+						if (res.status == 200) {
+							const aplicaciones = await res.json();
+							this.apps = aplicaciones;
+						}
+					} else {
+						this.isAdmin = false;
 					}
-				} else {
-					this.isAdmin = false;
 				}
 			}
 		},

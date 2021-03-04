@@ -48,9 +48,6 @@
 									return-object
 								>
 								</v-overflow-btn>
-
-								{{ editedItem }}<br />
-								Name? {{ editedItem.apps.name }}
 								<v-btn color="#002F6C" text @click="close">
 									Cancelar
 								</v-btn>
@@ -244,9 +241,9 @@
 				if (this.editedItem.name != "") {
 					if (this.editedIndex > -1) {
 						let formdata = new FormData();
-						formdata.append("role_id", this.editedItem.id);
-						formdata.append("role_name", this.editedItem.name);
+						formdata.append("role_id", this.editedItem._id);
 						formdata.append("app_id", this.editedItem.apps._id);
+
 						console.log("formdata");
 						console.log(formdata);
 						axios
@@ -258,6 +255,7 @@
 
 						let formdata = new FormData();
 						formdata.append("role_name", this.editedItem.name);
+
 						console.log(formdata);
 						axios
 							.post("https://back.dashboard.catteam.tk/create-role", formdata)
@@ -283,8 +281,8 @@
 				let item = this.editedItem;
 				let formdata = new FormData();
 				formdata.append("role_id", item._id);
-				formdata.append("role_name", item.name);
-				console.log(formdata);
+
+				console.log(item._id);
 				axios
 					.post("https://back.dashboard.catteam.tk/delete-role", formdata)
 					//.then(response => response.text())
