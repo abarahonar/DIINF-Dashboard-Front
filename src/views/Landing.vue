@@ -343,7 +343,7 @@
 				formdata.append("id", item._id);
 				formdata.append("app_name", item.name);
 				formdata.append("app_url", item.url);
-				formdata.append("img", item.img);
+				formdata.append("app_img", item.img);
 				console.log(formdata);
 				axios
 					.post("https://back.dashboard.catteam.tk/delete-app", formdata)
@@ -390,7 +390,7 @@
 						let formdata = new FormData();
 						formdata.append("app_name", item.name);
 						formdata.append("app_url", item.url);
-						formdata.append("img", item.img);
+						formdata.append("app_img", item.img);
 						console.log(formdata);
 						axios
 							.post("https://back.dashboard.catteam.tk/create-app", formdata)

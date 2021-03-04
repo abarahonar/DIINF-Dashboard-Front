@@ -280,8 +280,8 @@
 			deleteItemConfirm() {
 				let item = this.editedItem;
 				let formdata = new FormData();
-				formdata.append("role_id", item._id);
-
+				formdata.append("id", item._id);
+				formdata.append("role_name", item.name);
 				console.log(item._id);
 				axios
 					.post("https://back.dashboard.catteam.tk/delete-role", formdata)
