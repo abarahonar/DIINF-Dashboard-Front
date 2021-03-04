@@ -106,20 +106,8 @@
 								</v-icon>
 							</v-avatar>
 
-							<h3>
-								{{ a.title }}
-							</h3>
 							<div class="justify-text">
 								{{ a.text }}
-							</div>
-							<div class="right-buttons">
-								11 de Enero de 2021<br />
-								<v-btn icon @click="editItem(a)" fab small flat>
-									<v-icon>mdi-pencil</v-icon>
-								</v-btn>
-								<v-btn icon @click="deleteItem(a)" fab flat small>
-									<v-icon>mdi-delete</v-icon>
-								</v-btn>
 							</div>
 						</v-banner>
 					</v-card-text>
@@ -217,13 +205,14 @@
 			},
 		},
 		async mounted() {
-			let res = await fetch("https://back.dashboard.catteam.tk/get-message", {
+			let res2 = await fetch("https://back.dashboard.catteam.tk/get-message", {
 				method: "get",
-				credentials: "include",
 			});
-			if (res.status == 200) {
-				const aplicaciones = await res.json();
-				this.avisos = JSON.parse(aplicaciones.res.apps);
+			if (res2.status == 200) {
+				const aviso = await res2.json();
+				this.avisos = aviso;
+
+				//Falta poder transformar Apps a Json y asi obtener los datos
 			}
 		},
 		async beforeCreate() {

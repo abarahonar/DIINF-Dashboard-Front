@@ -67,6 +67,7 @@
 									Ver más
 								</v-btn>
 							</div>
+
 							<v-banner
 								v-for="a in avisos"
 								:key="a.name"
@@ -80,15 +81,11 @@
 									</v-icon>
 								</v-avatar>
 
-								<h3>
-									{{ a.title }}
-								</h3>
+								<h3></h3>
 								<div class="justify-text">
 									{{ a.text }}
 								</div>
-								<div class="right-buttons">
-									11 de Enero de 2021
-								</div>
+								<div class="right-buttons"></div>
 							</v-banner>
 							<div class="right">
 								<v-btn
@@ -105,17 +102,10 @@
 					</div>
 
 					<div id="textblock" v-if="!v0">
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry's standard dummy text
-						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled it to make a type specimen book. It has survived not
-						only five centuries, but also the leap into electronic typesetting,
-						remaining essentially unchanged.
-						<br />
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry's standard dummy text
-						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled
+						Bienvenid@ al dashboard de aplicaciones del departamento de
+						ingeniería en Informática, una ves que inicies sesión a travez de
+						cuenta usach podras acceder a las aplicaciones que hayan registrado
+						en el sistema.
 						<br />
 					</div>
 				</v-col>

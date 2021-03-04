@@ -38,44 +38,19 @@
 									required
 								></v-text-field>
 
-								<v-autocomplete
+								<v-overflow-btn
+									class="my-2"
 									v-model="editedItem.apps"
 									:items="listApp"
-									filled
-									chips
-									color="blue-grey lighten-2"
-									label="Aplicaciones"
 									item-text="name"
+									label="Aplicacion"
+									filled
 									return-object
-									multiple
 								>
-									<template v-slot:selection="data">
-										<v-chip
-											v-bind="data.attrs"
-											:input-value="data.selected"
-											close
-											@click="data.select"
-											@click:close="remove(data.item)"
-										>
-											{{ data.item.name }}
-										</v-chip>
-									</template>
-									<template v-slot:item="data">
-										<template v-if="typeof data.item !== 'object'">
-											<v-list-item-content
-												v-text="data.item"
-											></v-list-item-content>
-										</template>
-										<template v-else>
-											<v-list-item-content>
-												<v-list-item-title
-													v-html="data.item.name"
-												></v-list-item-title>
-											</v-list-item-content>
-										</template>
-									</template>
-								</v-autocomplete>
+								</v-overflow-btn>
 
+								{{ editedItem }}<br />
+								Name? {{ editedItem.apps.name }}
 								<v-btn color="#002F6C" text @click="close">
 									Cancelar
 								</v-btn>
@@ -267,20 +242,30 @@
 
 			save() {
 				if (this.editedItem.name != "") {
-					//Para editar un rol
+					if (this.editedIndex > -1) {
+						let formdata = new FormData();
+						formdata.append("role_id", this.editedItem.id);
+						formdata.append("role_name", this.editedItem.name);
+						formdata.append("app_id", this.editedItem.apps._id);
+						console.log("formdata");
+						console.log(formdata);
+						axios
+							.post("https://back.dashboard.catteam.tk/add-app", formdata)
+							.then(result => console.log(result))
+							.catch(error => console.log("error", error));
+					} else {
+						//Para editar un rol
 
-					let formdata = new FormData();
-					formdata.append("role_name", this.editedItem.name);
-					let apps = JSON.stringify(this.editedItem.apps);
-					formdata.append("role_apps", apps);
-					console.log(formdata);
-					axios
-						.post("https://back.dashboard.catteam.tk/create-role", formdata)
-						.then(result => console.log(result))
-						.catch(error => console.log("error", error));
-
-					this.close();
+						let formdata = new FormData();
+						formdata.append("role_name", this.editedItem.name);
+						console.log(formdata);
+						axios
+							.post("https://back.dashboard.catteam.tk/create-role", formdata)
+							.then(result => console.log(result))
+							.catch(error => console.log("error", error));
+					}
 				}
+				this.close();
 			},
 			editItem(item) {
 				this.editedIndex = this.roles.indexOf(item);
@@ -295,16 +280,17 @@
 			},
 
 			deleteItemConfirm() {
-				let data = JSON.stringify(this.editedItem);
-				fetch("https://back.dashboard.catteam.tk/delete-role", {
-					method: "delete",
-					headers: {
-						"Content-Type": "application/json",
-						//"Content-Type": "multipart/form-data",
-					},
-					body: data,
-					credentials: "include",
-				});
+				let item = this.editedItem;
+				let formdata = new FormData();
+				formdata.append("role_id", item._id);
+				formdata.append("role_name", item.name);
+				console.log(formdata);
+				axios
+					.post("https://back.dashboard.catteam.tk/delete-role", formdata)
+					//.then(response => response.text())
+					.then(result => console.log(result))
+					.catch(error => console.log("error", error));
+
 				this.closeDelete();
 			},
 
