@@ -15,7 +15,7 @@
 
 				Vista de Avisos<br />
 				Crear, editar y borrar avisos.
-				<br /><br /><br /><br /><br /><br />
+				<h1>Las funcionalidades de esta vista no están activas</h1>
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn dark class="ma-2" color="#002F6C" v-bind="attrs" v-on="on">
@@ -163,15 +163,15 @@
 				email: "",
 				types: [
 					{
-						name: "Aviso",
+						name: "Aviso - Amarillo",
 						color: "#fae73e",
 					},
 					{
-						name: "Error",
+						name: "Error - Rojo",
 						color: "#ff153c",
 					},
 					{
-						name: "Informacion",
+						name: "Informacion - Celeste",
 						color: "#64acfe",
 					},
 				],
@@ -211,8 +211,6 @@
 			if (res2.status == 200) {
 				const aviso = await res2.json();
 				this.avisos = aviso;
-
-				//Falta poder transformar Apps a Json y asi obtener los datos
 			}
 		},
 		async beforeCreate() {
@@ -239,45 +237,9 @@
 			save() {
 				if (this.editedItem.title != "" && this.editedItem.text != "") {
 					if (this.editedIndex > -1) {
-						//Object.assign(this.apps[this.editedIndex], this.editedItem);
-						//Borrar arriba y descomentar
-						//let data = new FormData();
-						let data = JSON.stringify(this.editedItem);
-						//data.append("name", item.name);
-						//data.append("url", item.url);
-						//data.append("img", item.img);
-						console.log(data);
-						fetch("https://back.dashboard.catteam.tk/edit-message ", {
-							method: "put",
-							headers: {
-								"Content-Type": "application/json",
-								//"Content-Type": "multipart/form-data",
-							},
-							//body: data,
-							body: data,
-							credentials: "include",
-						});
+						//Editar avisos
 					} else {
-						//this.apps.push(this.editedItem);
-						//Borrar arriba y descomentar
-
-						//let data = new FormData();
-						let data = JSON.stringify(this.editedItem);
-						//data.append("name", item.name);
-						//data.append("url", item.url);
-						//data.append("img", item.img);
-						//console.log(data);
-						fetch("https://back.dashboard.catteam.tk/create-message", {
-							method: "post",
-
-							headers: {
-								"Content-Type": "application/json",
-
-								//"Content-Type": "multipart/form-data",
-							},
-							credentials: "include",
-							body: data,
-						});
+						// Crear avisoss
 					}
 				}
 				this.close();

@@ -15,7 +15,7 @@
 
 				Vista de Roles<br />
 				Crear, editar y borrar un rol. Asignar aplicaciones.
-				<br /><br /><br /><br /><br /><br />
+
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn dark class="ma-2" color="#002F6C" v-bind="attrs" v-on="on">
@@ -203,8 +203,6 @@
 			if (res2.status == 200) {
 				const rol = await res2.json();
 				this.roles = rol;
-
-				//Falta poder transformar Apps a Json y asi obtener los datos
 			}
 		},
 
@@ -215,7 +213,6 @@
 			});
 			if (res.status != 200) {
 				this.$router.push("/login");
-				//Si res status != 200 el usuario no esta logeado -> Redireccionar
 			} else {
 				const user = await res.json();
 				this.displayName = user.name;
@@ -251,8 +248,6 @@
 							.then(result => console.log(result))
 							.catch(error => console.log("error", error));
 					} else {
-						//Para editar un rol
-
 						let formdata = new FormData();
 						formdata.append("role_name", this.editedItem.name);
 
@@ -285,7 +280,6 @@
 				console.log(item._id);
 				axios
 					.post("https://back.dashboard.catteam.tk/delete-role", formdata)
-					//.then(response => response.text())
 					.then(result => console.log(result))
 					.catch(error => console.log("error", error));
 

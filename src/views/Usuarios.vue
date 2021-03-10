@@ -15,8 +15,6 @@
 				Vista de Usuarios<br />
 				Asignar Roles y Activar/Desactivar cuenta.
 				<h1>Las funcionalidades de esta vista no están activas</h1>
-				<br /><br /><br /><br /><br /><br />
-
 				<v-dialog v-model="dialog" max-width="500px">
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
